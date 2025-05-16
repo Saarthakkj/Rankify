@@ -568,14 +568,15 @@ export default function LandingPage() {
                 <span>RankWave</span>
               </div>
               <p className="text-muted-foreground mb-4">Helping websites optimize for AI-powered search engines.</p>
-              <div className="flex gap-4">
+              {/* TO ADD LOGOS HERE */}
+              {/* <div className="flex gap-4">
                 {["twitter", "facebook", "instagram", "linkedin"].map((social) => (
                   <Link key={social} href="#" className="text-muted-foreground hover:text-purple-600">
                     <span className="sr-only">{social}</span>
                     <div className="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-700"></div>
                   </Link>
                 ))}
-              </div>
+              </div> */}
             </div>
             {[
               {
