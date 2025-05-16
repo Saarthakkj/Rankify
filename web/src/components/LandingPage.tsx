@@ -382,9 +382,6 @@ export default function LandingPage() {
               viewport={{ once: true, margin: "-100px" }}
               variants={staggerContainer}
             >
-              {/* Connection lines (only visible on md screens and up) */}
-              <div className="hidden md:block absolute top-1/4 left-1/3 w-1/3 h-0.5 bg-purple-200 dark:bg-purple-800"></div>
-              <div className="hidden md:block absolute top-1/4 right-1/3 w-1/3 h-0.5 bg-purple-200 dark:bg-purple-800"></div>
 
               {[
                 {
@@ -513,7 +510,7 @@ export default function LandingPage() {
                       {plan.cta}
                     </Button>
                   </div>
-                  <div className="p-8 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+                  <div className="p-8 h-full bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
                     <ul className="space-y-3">
                       {plan.features.map((feature, j) => (
                         <li key={j} className="flex items-center gap-2">
@@ -609,7 +606,7 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 text-center text-muted-foreground">
-            <p>© {new Date().getFullYear()} RankInsight. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} RankWave. All rights reserved.</p>
           </div>
         </div>
       </footer>
