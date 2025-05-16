@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
           const sonar = await querySonar(q);
           console.log('Sonar response:', sonar);
           return { question: q, answer: sonar.answer };
-        } catch (err: any) {
+        } catch (err) {
           console.error('Sonar error for query:', q, err);
           return { question: q, answer: 'Error fetching answer.' };
         }
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
 
     console.log('Final results:', results);
     return NextResponse.json({ results });
-  } catch (err: any) {
+  } catch (err) {
     console.error('Top-level error:', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
