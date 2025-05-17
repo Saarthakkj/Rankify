@@ -11,7 +11,7 @@ import Link from "next/link"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function LandingPage() {
-  const [url, setUrl] = useState("")
+  const [url, setUrl] = useState("https://")
   const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -51,7 +51,7 @@ export default function LandingPage() {
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-xl">
             <Globe className="h-6 w-6 text-purple-600" />
-            <span>RankWave</span>
+            <Link href={"/"}>RankWave</Link>
           </div>
           <nav className="hidden md:flex gap-6">
             <Link href="#features" className="text-sm font-medium transition-colors hover:text-primary">
@@ -66,7 +66,7 @@ export default function LandingPage() {
           </nav>
           <div className="flex items-center gap-4">
             <ThemeToggle />
-              <Link href={"/sonar-call"}>
+              <Link href={"/dashboard"}>
               
             <Button variant="outline" size="sm" className="hidden md:flex">
               Dashboard
