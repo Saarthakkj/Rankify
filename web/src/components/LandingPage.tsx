@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { motion } from "motion/react"
 import { ArrowRight, BarChart3, Globe, Search, Shield, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -11,19 +12,20 @@ import Link from "next/link"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function LandingPage() {
+  const router = useRouter();
   const [url, setUrl] = useState("https://")
+  // const [desc , setDesc ]  = useState("")
   const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!url) return
+    if (!url  ) return
 
     setIsAnalyzing(true)
-    // Simulate analysis
-    setTimeout(() => {
-      setIsAnalyzing(false)
-      // In a real app, you would redirect to results or show them
-    }, 2000)
+
+    router.push(
+      `/sonar-call?url=${encodeURIComponent(url)}`
+    )
   }
 
   const fadeIn = {
