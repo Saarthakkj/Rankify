@@ -25,9 +25,18 @@ export async function generateQueries(content: string): Promise<string[]> {
     .replace(/```$/, '')
     .trim();
 
+  // Remove code block formatting if present (```json, etc)
+  const cleanedText = raw
+    .replace(/^```(?:json)?/, '')
+    .replace(/```$/, '')
+    .trim();
+
   try {
     const arr = JSON.parse(cleanedText);
+    const arr = JSON.parse(cleanedText);
     if (Array.isArray(arr)) return arr.slice(0, 10);
+  } catch (error) {
+    console.error('JSON parse error:', error, 'Raw text:', raw);
   } catch (error) {
     console.error('JSON parse error:', error, 'Raw text:', raw);
     // Fallback: parse line-based list
@@ -35,7 +44,16 @@ export async function generateQueries(content: string): Promise<string[]> {
 
   // More robust fallback parsing for various formats
   return cleanedText
+  // More robust fallback parsing for various formats
+  return cleanedText
     .split(/\n|,/) // split by newline or comma
+    .map(line => {
+      // Remove list markers, quotes, and clean the strings
+      return line
+        .replace(/^[\d\-\*\.\s"'\[\]]+/, '') // Remove list markers, quotes, brackets at start
+        .replace(/["'\]\s]+$/, '')           // Remove quotes, brackets at end
+        .trim();
+    })
     .map(line => {
       // Remove list markers, quotes, and clean the strings
       return line
