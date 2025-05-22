@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
           console.log('Querying Sonar for:', q);
           const sonar = await querySonar(q);
           console.log('Sonar response:', sonar);
-          return { question: q, answer: sonar.answer };
+          return { question: q, answer: sonar.answer , citations : sonar.citations };
         } catch (err: any) {
           console.error('Sonar error for query:', q, err);
           return { question: q, answer: 'Error fetching answer.' };

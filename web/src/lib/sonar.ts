@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export interface SonarResponse {
   answer: string;
-  citations?: unknown;
+  citations?: string[];
 }
 
 export async function querySonar(question: string): Promise<SonarResponse> {
@@ -14,7 +14,7 @@ export async function querySonar(question: string): Promise<SonarResponse> {
       {
         model: 'sonar-pro',
         messages: [{ role: 'user', content: question }],
-        max_tokens: 500
+        max_tokens: 100
       },
       {
         headers: {
@@ -26,7 +26,7 @@ export async function querySonar(question: string): Promise<SonarResponse> {
 
     return {
       answer: data?.choices?.[0]?.message?.content ?? '',
-      citations: data?.choices?.[0]?.message?.citations ?? undefined,
+      citations: data?.citations ?? undefined,
     };
   } catch (error: any) {
     console.error('Sonar API Error:', {
@@ -36,4 +36,4 @@ export async function querySonar(question: string): Promise<SonarResponse> {
     });
     throw error;
   }
-} 
+}
