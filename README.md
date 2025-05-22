@@ -1,2 +1,2 @@
-# RankWave
+# Rankify
 perplexity hackathon project

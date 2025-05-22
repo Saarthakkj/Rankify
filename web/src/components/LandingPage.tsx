@@ -51,7 +51,7 @@ export default function LandingPage() {
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-xl">
             <Globe className="h-6 w-6 text-purple-600" />
-            <Link href={"/"}>RankWave</Link>
+            <Link href={"/"}>Rankify</Link>
           </div>
           <nav className="hidden md:flex gap-6">
             <Link href="#features" className="text-sm font-medium transition-colors hover:text-primary">
@@ -565,7 +565,7 @@ export default function LandingPage() {
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 font-bold text-xl mb-4">
                 <Globe className="h-6 w-6 text-purple-600" />
-                <span>RankWave</span>
+                <span>Rankify</span>
               </div>
               <p className="text-muted-foreground mb-4">Helping websites optimize for AI-powered search engines.</p>
               {/* TO ADD LOGOS HERE */}
@@ -607,7 +607,7 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 text-center text-muted-foreground">
-            <p>© {new Date().getFullYear()} RankWave. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Rankify. All rights reserved.</p>
           </div>
         </div>
       </footer>

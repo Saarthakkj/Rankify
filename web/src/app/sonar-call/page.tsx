@@ -39,7 +39,7 @@ export default function Page() {
 
   return (
     <main className="min-h-screen p-8 space-y-8 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold text-center">RankWave Pipeline Demo</h1>
+      <h1 className="text-3xl font-bold text-center">Rankify Pipeline Demo</h1>
       <form
         onSubmit={handleSubmit}
         className="space-y-4 bg-gray-50 dark:bg-gray-800 p-6 rounded shadow"
