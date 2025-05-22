@@ -2,8 +2,8 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
-export async function generateQueries(content: string, domain: string): Promise<string[]> {
-  const prompt = `Review the following website content carefully. Imagine you are a potential customer or user of this service or business in the "${domain}" domain.
+export async function generateQueries(content: string): Promise<string[]> {
+  const prompt = `Review the following website content carefully. Imagine you are a potential customer or user of this service or business in this domain.
 
   Based solely on this content, generate 10 diverse, realistic questions that you, as a user, would naturally ask an AI assistant when looking for this specific type of service or solution. Your questions should be ones that would logically lead to this website being recommended as an answer.
 
