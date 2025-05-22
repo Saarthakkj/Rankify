@@ -8,12 +8,12 @@ export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   try {
-    const { url, domain } = await req.json();
-    console.log('Request body:', { url, domain });
+    const { url  } = await req.json();
+    console.log('Request body:', { url,   });
 
-    if (!url || !domain) {
-      console.log('Missing required fields:', { url, domain });
-      return NextResponse.json({ error: 'url and domain are required' }, { status: 400 });
+    if (!url  ) {
+      console.log('Missing required fields:', { url,   });
+      return NextResponse.json({ error: 'url and   are required' }, { status: 400 });
     }
 
     // 1. Scrape content
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     });
 
     // 3. Generate 10 user-style queries
-    const queries = await generateQueries(content, domain);
+    const queries = await generateQueries(content  );
     console.log('Generated queries:', queries);
 
     // 4. Query Sonar for each question (in parallel but with basic throttling)
@@ -37,8 +37,8 @@ export async function POST(req: NextRequest) {
           console.log('Querying Sonar for:', q);
           const sonar = await querySonar(q);
           console.log('Sonar response:', sonar);
-          return { question: q, answer: sonar.answer };
-        } catch (err) {
+          return { question: q, answer: sonar.answer , citations : sonar.citations };
+        } catch (err: any) {
           console.error('Sonar error for query:', q, err);
           return { question: q, answer: 'Error fetching answer.' };
         }
