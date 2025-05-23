@@ -119,34 +119,7 @@ export default function Home() {
         <p className="text-red-600 text-center">Error: {error}</p>
       )}
 
-      {results.length > 0 && (
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">Results</h2>
-          {results.map((item, idx) => (
-            <details
-              key={idx}
-              className="border rounded p-4 bg-white/50 dark:bg-gray-900/50"
-            >
-              <summary className="font-medium cursor-pointer">
-                {item.question}
-              </summary>
-              <p className="mt-2 whitespace-pre-wrap">{item.answer}</p>
-              <details className="mt-2">
-                <summary className="font-medium cursor-pointer">
-                  Citations
-                </summary>
-                <ul className="list-disc pl-5">
-                  {item.citations?.map((citation: any, index: number) => (
-                    <li key={index} className="mt-1">
-                      {citation}
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            </details>
-          ))}
-        </section>
-      )}
+      
 
       {Object.keys(citationFrequency).length > 0 && (
         <section className="space-y-4 mt-8 border-t pt-4">

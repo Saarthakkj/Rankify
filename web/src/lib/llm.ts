@@ -31,10 +31,6 @@ export async function generateQueries(content: string): Promise<string[]> {
     if (Array.isArray(arr)) return arr.slice(0, 10);
   } catch (error) {
     console.error('JSON parse error:', error, 'Raw text:', raw);
-<<<<<<< Updated upstream
-=======
-    // Fallback: parse line-based list
->>>>>>> Stashed changes
   }
 
   // More robust fallback parsing for various formats
