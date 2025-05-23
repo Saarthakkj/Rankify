@@ -22,7 +22,6 @@ export default function LandingPage() {
     if (!url  ) return
 
     setIsAnalyzing(true)
-
     router.push(
       `/sonar-call?url=${encodeURIComponent(url)}`
     )

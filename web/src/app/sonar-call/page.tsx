@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from "react";
-
+import { useState  , useEffect} from "react";
+import {useSearchParams} from "next/navigation" ;
 interface QueryResult {
   question: string;
   answer: string;
@@ -12,12 +12,42 @@ export default function Home() {
   const [url, setUrl] = useState("");
   // const [domain, setDomain] = useState("");
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams() ;
   const [results, setResults] = useState<QueryResult[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [citationFrequency, setCitationFrequency] = useState<Record<string, number>>({});
+  
+  
+  async function sendResponse()
+  {
+    const q = searchParams.get("url"); 
+    if(q) {
+      console.error(" no url detected"); 
+      return ; 
+    }
+    const response = await fetch('/api/process' , 
+    {
+      method : 'POST' , 
+      headers : {'Content-Type' : 'application/json'} , 
+      body : JSON.stringify(q)
+    }); 
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    if(!response.ok) throw new Error('{fetch results} error ') ;
+    const data = await response.json() ;
+
+    if(data) { throw new Error('received empty error ')} ;
+
+    return data;
+  }
+
+
+  useEffect(() => 
+  {  
+    sendResponse() ; 
+  }  , [searchParams]);
+
+  const fetchResults = async ()=> {
+    // e.preventDefault();
     setLoading(true);
     setError(null);
     setResults([]);
@@ -50,6 +80,10 @@ export default function Home() {
               return false;
             }
           }
+
+
+
+          if(searchParams.get("domain"))
           
           uniqueCitations.add(citation);
           return true;
@@ -71,22 +105,6 @@ export default function Home() {
       setLoading(false);
     }
   };
-
-  function isSameDomain(url1 : string, url2 : string ) {
-    try {
-      // Create URL objects to properly parse the URLs
-      const parsedUrl1 = new URL(url1);
-      const parsedUrl2 = new URL(url2);
-      
-      // Compare the hostnames (domains)
-      return parsedUrl1.hostname === parsedUrl2.hostname;
-    } catch (error : any) {
-      // Handle invalid URLs
-      console.error('Invalid URL format:', error.message);
-      return false;
-    }
-  }
-
 
 
 

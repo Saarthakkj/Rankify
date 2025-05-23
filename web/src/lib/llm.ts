@@ -19,11 +19,6 @@ export async function generateQueries(content: string): Promise<string[]> {
   const response = await result.response;
   const raw = response.text().trim() ?? '[]';
 
-  // Remove code block formatting if present (```json, etc)
-  const cleanedText = raw
-    .replace(/^```(?:json)?/, '')
-    .replace(/```$/, '')
-    .trim();
 
   // Remove code block formatting if present (```json, etc)
   const cleanedText = raw
@@ -33,17 +28,11 @@ export async function generateQueries(content: string): Promise<string[]> {
 
   try {
     const arr = JSON.parse(cleanedText);
-    const arr = JSON.parse(cleanedText);
     if (Array.isArray(arr)) return arr.slice(0, 10);
   } catch (error) {
     console.error('JSON parse error:', error, 'Raw text:', raw);
-  } catch (error) {
-    console.error('JSON parse error:', error, 'Raw text:', raw);
-    // Fallback: parse line-based list
   }
 
-  // More robust fallback parsing for various formats
-  return cleanedText
   // More robust fallback parsing for various formats
   return cleanedText
     .split(/\n|,/) // split by newline or comma
@@ -63,4 +52,4 @@ export async function generateQueries(content: string): Promise<string[]> {
     })
     .filter(Boolean)
     .slice(0, 10);
-} 
+}

@@ -9,10 +9,10 @@ export const runtime = 'nodejs';
 export async function POST(req: NextRequest) {
   try {
     const { url  } = await req.json();
-    console.log('Request body:', { url,   });
+    console.log('Request body:', { url  });
 
     if (!url  ) {
-      console.log('Missing required fields:', { url,   });
+      console.log('Missing required fields:', { url  });
       return NextResponse.json({ error: 'url and   are required' }, { status: 400 });
     }
 
