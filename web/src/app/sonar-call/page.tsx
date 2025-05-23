@@ -9,15 +9,24 @@ interface QueryResult {
 }
 
 export default function Home() {
-  const [url, setUrl] = useState("");
+  // const [url, setUrl] = useState("");
   // const [domain, setDomain] = useState("");
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams() ;
+  const urlParam = searchParams.get("url"); 
   const [results, setResults] = useState<QueryResult[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [citationFrequency, setCitationFrequency] = useState<Record<string, number>>({});
   
   
+  function isSameDomain( a : string  , b : string ){
+    try{
+      return new URL(a).hostname === new URL(b).hostname ;
+    }catch{
+      return false;
+    }
+  }
+
   async function sendResponse()
   {
     const q = searchParams.get("url"); 
@@ -41,111 +50,71 @@ export default function Home() {
   }
 
 
-  useEffect(() => 
-  {  
-    sendResponse() ; 
-  }  , [searchParams]);
-
-  const fetchResults = async ()=> {
-    // e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setResults([]);
-    try {
-      const res = await fetch("/api/process", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url,   }),
-      });
-      if (!res.ok) {
-        throw new Error("Server error");
-      }
-      const data = await res.json();
-      setResults(data.results || []);
-      
-      // Calculate citation frequency
-      const citations: Record<string, number> = {};
-      const uniqueCitations = new Set<string>();
-      
-      data.results?.forEach((result: QueryResult) => {
-        // Filter out duplicate citations by URL domain
-        const resultCitations = result.citations || [];
-        const filteredCitations = resultCitations.filter(citation => {
-          // Skip if we already added this exact citation
-          if (uniqueCitations.has(citation)) return false;
-          
-          // Check if the domain is the same as any already added citation
-          for (const existingCitation of uniqueCitations) {
-            if (isSameDomain(citation, existingCitation)) {
-              return false;
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      setError(null);
+      setResults([]);
+      try {
+        const res = await fetch("/api/process", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url : urlParam   }),
+        });
+        if (!res.ok) {
+          throw new Error("Server error");
+        }
+        const data = await res.json();
+        setResults(data.results || []);
+        
+        // Calculate citation frequency
+        const citations: Record<string, number> = {};
+        const uniqueCitations = new Set<string>();
+        
+        data.results?.forEach((result: QueryResult) => {
+          // Filter out duplicate citations by URL domain
+          const resultCitations = result.citations || [];
+          const filteredCitations = resultCitations.filter(citation => {
+            // Skip if we already added this exact citation
+            if (uniqueCitations.has(citation)) return false;
+            
+            // Check if the domain is the same as any already added citation
+            for (const existingCitation of uniqueCitations) {
+              if (isSameDomain(citation, existingCitation)) {
+                return false;
+              }
             }
-          }
-
-
-
-          if(searchParams.get("domain"))
+            
+            uniqueCitations.add(citation);
+            return true;
+          });
           
-          uniqueCitations.add(citation);
-          return true;
+          // Update result with filtered citations
+          result.citations = filteredCitations;
+          
+          // Count citations for frequency display
+          filteredCitations.forEach(citation => {
+            citations[citation] = (citations[citation] || 0) + 1;
+          });
         });
         
-        // Update result with filtered citations
-        result.citations = filteredCitations;
-        
-        // Count citations for frequency display
-        filteredCitations.forEach(citation => {
-          citations[citation] = (citations[citation] || 0) + 1;
-        });
-      });
-      
-      setCitationFrequency(citations);
-    } catch (err: any) {
-      setError(err.message || "Unknown error");
-    } finally {
-      setLoading(false);
+        setCitationFrequency(citations);
+      } catch (err: any) {
+        setError(err.message || "Unknown error");
+      } finally {
+        setLoading(false);
+      }
     }
-  };
+
+    fetchData() ;
+  } ,   [urlParam]) ;
 
 
 
   return (
     <main className="min-h-screen p-8 space-y-8 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold text-center">Rankify Pipeline Demo</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4 bg-gray-50 dark:bg-gray-800 p-6 rounded shadow"
-      >
-        <div>
-          <label className="block text-sm font-medium mb-1">Target URL</label>
-          <input
-            type="url"
-            required
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            className="w-full border px-3 py-2 rounded dark:bg-gray-900"
-            placeholder="https://www.chatbase.co/"
-          />
-        </div>
-        {/* <div>
-          <label className="block text-sm font-medium mb-1">More about your business</label>
-          <input
-            type="text"
-            required
-            value={domain}
-            onChange={(e) => setDomain(e.target.value)}
-            className="w-full border px-3 py-2 rounded dark:bg-gray-900"
-            placeholder="e.g. Offers tools to build AI chatbots trained on your data."
-          />
-        </div> */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? "Processing..." : "Generate"}
-        </button>
-      </form>
-
+      <h1 className="text-3xl font-bold text-center">Rankify Demo</h1>
+      
       {error && (
         <p className="text-red-600 text-center">Error: {error}</p>
       )}
