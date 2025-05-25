@@ -16,7 +16,7 @@ export async function generateQueries(content: string): Promise<string[]> {
   ###`;
   const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-04-17' });
   const result = await model.generateContent(prompt);
-  const response = await result.response;
+  const response = result.response;
   const raw = response.text().trim() ?? '[]';
 
 

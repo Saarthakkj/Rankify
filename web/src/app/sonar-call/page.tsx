@@ -1,6 +1,6 @@
 'use client';
 
-import { useState  , useEffect} from "react";
+import { useState  ,useRef ,  useEffect} from "react";
 import {useSearchParams} from "next/navigation" ;
 interface QueryResult {
   question: string;
@@ -8,15 +8,33 @@ interface QueryResult {
   citations?: string[];
 }
 
+
 export default function Home() {
   // const [url, setUrl] = useState("");
   // const [domain, setDomain] = useState("");
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams() ;
+  const hasNotified = useRef(false); 
   const urlParam = searchParams.get("url"); 
   const [results, setResults] = useState<QueryResult[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [citationFrequency, setCitationFrequency] = useState<Record<string, number>>({});
+  const [processBCalls, setProcessBCalls] = useState(0);
+  
+  async function notifyCitationChange(freq: Record<string, number>) {
+
+    // console.log("Called once"); 
+    setProcessBCalls((c) => c+1); 
+    const citations = Object.keys(freq);
+    const response = await fetch('/api/process-b', 
+      { method: 'POST', body: JSON.stringify(citations) }
+    );
+
+    if(!response.ok ) throw new Error("error in response of process-b"); 
+    console.log("process-b response : ", response); 
+  }
+
+
   
   
   function isSameDomain( a : string  , b : string ){
@@ -26,29 +44,6 @@ export default function Home() {
       return false;
     }
   }
-
-  async function sendResponse()
-  {
-    const q = searchParams.get("url"); 
-    if(q) {
-      console.error(" no url detected"); 
-      return ; 
-    }
-    const response = await fetch('/api/process' , 
-    {
-      method : 'POST' , 
-      headers : {'Content-Type' : 'application/json'} , 
-      body : JSON.stringify(q)
-    }); 
-
-    if(!response.ok) throw new Error('{fetch results} error ') ;
-    const data = await response.json() ;
-
-    if(data) { throw new Error('received empty error ')} ;
-
-    return data;
-  }
-
 
   useEffect(() => {
     async function fetchData() {
@@ -109,6 +104,14 @@ export default function Home() {
     fetchData() ;
   } ,   [urlParam]) ;
 
+  // new effect for citationFrequency changes
+  useEffect(() => {
+    // console.log("\n----CALLED : \n")
+    if (!Object.keys(citationFrequency).length  || hasNotified.current) return;
+    hasNotified.current = true; 
+    notifyCitationChange(citationFrequency);
+  }, [citationFrequency]);
+
 
 
   return (
@@ -119,7 +122,11 @@ export default function Home() {
         <p className="text-red-600 text-center">Error: {error}</p>
       )}
 
-      
+      {/* display the number of calls */}
+      <p className="text-sm text-gray-500">
+        process-b calls made: {processBCalls}
+      </p>
+
 
       {Object.keys(citationFrequency).length > 0 && (
         <section className="space-y-4 mt-8 border-t pt-4">

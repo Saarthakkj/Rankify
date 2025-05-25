@@ -1,28 +1,36 @@
-import axios from 'axios';
-import * as cheerio from 'cheerio';
+// import axios from 'axios';
+// import * as cheerio from 'cheerio';
+import { NextRequest, NextResponse } from 'next/server';
+import FirecrawlApp, {ScrapeResponse} from '@mendable/firecrawl-js';
 
-/**
- * Fetches a web page and extracts readable text content.
- * @param url target URL
- * @returns plain-text string without scripts/styles/extra whitespace
- */
-export async function scrapePage(url: string): Promise<string> {
-  const { data } = await axios.get<string>(url, {
-    headers: {
-      'User-Agent':
-        'Mozilla/5.0 (compatible; RankWaveBot/1.0; +https://example.com/bot)',
-      Accept: 'text/html,application/xhtml+xml',
-    },
-  });
+const app = new FirecrawlApp({apiKey: process.env.FIRECRAWL_API_KEY});
 
-  const $ = cheerio.load(data);
-  // Remove unwanted tags
-  $('script, style, noscript, svg, iframe').remove();
+// Scrape a website
 
-  const bodyText = $('body').text();
+export async function scrapePage(url : string) : Promise<string>  {
+  try{
+    
+    // Scrape a website:
+    // console.log("url : " , url ); 
+    const scrapeResult = await app.scrapeUrl(url ,  { formats: ['markdown', 'html'] })  as ScrapeResponse;
 
-  // Collapse whitespace
-  const cleaned = bodyText.replace(/\s+/g, ' ').trim();
+    if (!scrapeResult.success) {
+      throw new Error(`Failed to scrape: ${scrapeResult.error}`)
+    }
 
-  return cleaned;
-} 
+    // console.log( "\n\nscrapreresult : \n\n"  , scrapeResult) ;
+
+    const markdownString = scrapeResult.markdown;
+
+    // console.log("\n\n scrapeMarkdwon : \n\n" , markdownString?.slice(0 ,500)) ;
+
+    if (markdownString === undefined) {
+      throw new Error('Scraped markdown is undefined');
+    }
+
+    return markdownString;
+  }catch(error){
+      console.error("error in processing process-b reponse : " , error);
+      return "" ;
+  }
+}

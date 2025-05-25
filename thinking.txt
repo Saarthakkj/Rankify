@@ -1,1 +1,0 @@
-- using gemini to generate customer centric queries (write a prompt for general user persona)

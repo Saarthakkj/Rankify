@@ -9,7 +9,7 @@ export const runtime = 'nodejs';
 export async function POST(req: NextRequest) {
   try {
     const { url  } = await req.json();
-    console.log('Request body:', { url  });
+    // console.log('Request body:', { url  });
 
     if (!url  ) {
       console.log('Missing required fields:', { url  });
@@ -18,8 +18,9 @@ export async function POST(req: NextRequest) {
 
     // 1. Scrape content
     const content = await scrapePage(url);
-    console.log('Scraped content length:', content.length);
-    console.log('Content preview:', content.slice(0, 200));
+    // console.log('Scraped content length:', content.length);
+  
+    // console.log('Content preview:', content.slice(0, 200));
 
     // 2. Persist markdown (fire and forget)
     saveMarkdown(content, url).catch((err) => {
@@ -28,15 +29,15 @@ export async function POST(req: NextRequest) {
 
     // 3. Generate 10 user-style queries
     const queries = await generateQueries(content  );
-    console.log('Generated queries:', queries);
+    // console.log('Generated queries:', queries);
 
     // 4. Query Sonar for each question (in parallel but with basic throttling)
     const results = await Promise.all(
       queries.map(async (q) => {
         try {
-          console.log('Querying Sonar for:', q);
+          // console.log('Querying Sonar for:', q);
           const sonar = await querySonar(q);
-          console.log('Sonar response:', sonar);
+          // console.log('Sonar response:', sonar);
           return { question: q, answer: sonar.answer , citations : sonar.citations };
         } catch (err: any) {
           console.error('Sonar error for query:', q, err);
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest) {
       }),
     );
 
-    console.log('Final results:', results);
+    // console.log('Final results:', results);
     return NextResponse.json({ results });
   } catch (err) {
     console.error('Top-level error:', err);
