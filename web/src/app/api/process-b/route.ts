@@ -12,9 +12,9 @@ export async function POST(req: NextRequest) {
         const citations_list = await req.json();
         // console.log("citations list : " , citations_list); 
 
-        const dummy = [citations_list[0] , citations_list[1]  ,  citations_list[2] ] ;
-
-        console.log("citations dummy : " , dummy); 
+        // const dummy = [citations_list[0] , citations_list[1]  ,  citations_list[2] ] ;
+// 
+        // console.log("citations dummy : " , dummy); 
 
         // var scraped_page = "";
 

@@ -1,29 +1,25 @@
 'use client';
 
-import { useState  ,useRef ,  useEffect} from "react";
-import {useSearchParams} from "next/navigation" ;
+import { useState, useRef, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+
 interface QueryResult {
   question: string;
   answer: string;
   citations?: string[];
 }
 
-
-export default function Home() {
-  // const [url, setUrl] = useState("");
-  // const [domain, setDomain] = useState("");
+function SonarCallContent() {
   const [loading, setLoading] = useState(false);
-  const searchParams = useSearchParams() ;
-  const hasNotified = useRef(false); 
-  const urlParam = searchParams.get("url"); 
+  const searchParams = useSearchParams();
+  const hasNotified = useRef(false);
+  const urlParam = searchParams.get("url");
   const [results, setResults] = useState<QueryResult[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [citationFrequency, setCitationFrequency] = useState<Record<string, number>>({});
   const [processBCalls, setProcessBCalls] = useState(0);
-  
-  async function notifyCitationChange(freq: Record<string, number>) {
 
-    // console.log("Called once"); 
+  async function notifyCitationChange(freq: Record<string, number>) {
     setProcessBCalls((c) => c+1); 
     const citations = Object.keys(freq);
     const response = await fetch('/api/process-b', 
@@ -34,9 +30,6 @@ export default function Home() {
     console.log("process-b response : ", response); 
   }
 
-
-  
-  
   function isSameDomain( a : string  , b : string ){
     try{
       return new URL(a).hostname === new URL(b).hostname ;
@@ -112,8 +105,6 @@ export default function Home() {
     notifyCitationChange(citationFrequency);
   }, [citationFrequency]);
 
-
-
   return (
     <main className="min-h-screen p-8 space-y-8 max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold text-center">Rankify Demo</h1>
@@ -149,5 +140,13 @@ export default function Home() {
         </section>
       )}
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <SonarCallContent />
+    </Suspense>
   );
 }
