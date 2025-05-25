@@ -11,6 +11,9 @@ importers:
       '@google/generative-ai':
         specifier: ^0.24.1
         version: 0.24.1
+      '@mendable/firecrawl-js':
+        specifier: ^1.21.1
+        version: 1.25.1
       '@radix-ui/react-dropdown-menu':
         specifier: ^2.1.14
         version: 2.1.14(@types/react-dom@19.1.5(@types/react@19.1.4))(@types/react@19.1.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -38,6 +41,9 @@ importers:
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
+      firecrawl:
+        specifier: ^1.21.1
+        version: 1.25.1
       fs-extra:
         specifier: ^11.3.0
         version: 11.3.0
@@ -339,6 +345,10 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@mendable/firecrawl-js@1.25.1':
+    resolution: {integrity: sha512-i4MyViBXV9l4Z/gaY1tWXs74ZD4Oiea7xKUOzmYmC/AYKWEMrUuOhZHvdNJCOTHkTWq81xe4pYBQaGp+rtDPuA==}
+    engines: {node: '>=22.0.0'}
 
   '@modelcontextprotocol/sdk@1.11.3':
     resolution: {integrity: sha512-rmOWVRUbUJD7iSvJugjUbFZshTAuJ48MXoZ80Osx1GM0K/H1w7rSEvmw8m6vdWxNASgtaHIhAgre4H/E9GJiYQ==}
@@ -1564,6 +1574,10 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
+  firecrawl@1.25.1:
+    resolution: {integrity: sha512-ob41yWTk6Yik13kPALGPj6RdRsOEHheY0IfAired+RqxZimEGSwVrlgfQQ2VHVFALUaHaMvC9SHfNwR9ougldg==}
+    engines: {node: '>=22.0.0'}
+
   flat-cache@4.0.1:
     resolution: {integrity: sha512-f7ccFPK3SXFHpx15UIGyRJ/FJQctuKZ0zVuN3frBo4HnK3cay9VEW0R6yPYFHC0AgqhukPzKjq22t5DmAyqGyw==}
     engines: {node: '>=16'}
@@ -2684,6 +2698,9 @@ packages:
     resolution: {integrity: sha512-3KS2b+kL7fsuk/eJZ7EQdnEmQoaho/r6KUef7hxvltNA5DR8NAUM+8wJMbJyZ4G9/7i3v5zPBIMN5aybAh2/Jg==}
     engines: {node: '>= 0.4'}
 
+  typescript-event-target@1.1.1:
+    resolution: {integrity: sha512-dFSOFBKV6uwaloBCCUhxlD3Pr/P1a/tJdcmPrTXCHlEFD3faj0mztjcGn6VBAhQ0/Bdy8K3VWrrqwbt/ffsYsg==}
+
   typescript@5.8.3:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
@@ -3031,6 +3048,15 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@mendable/firecrawl-js@1.25.1':
+    dependencies:
+      axios: 1.9.0
+      typescript-event-target: 1.1.1
+      zod: 3.24.4
+      zod-to-json-schema: 3.24.5(zod@3.24.4)
+    transitivePeerDependencies:
+      - debug
 
   '@modelcontextprotocol/sdk@1.11.3':
     dependencies:
@@ -4424,6 +4450,15 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
+  firecrawl@1.25.1:
+    dependencies:
+      axios: 1.9.0
+      typescript-event-target: 1.1.1
+      zod: 3.24.4
+      zod-to-json-schema: 3.24.5(zod@3.24.4)
+    transitivePeerDependencies:
+      - debug
+
   flat-cache@4.0.1:
     dependencies:
       flatted: 3.3.3
@@ -5709,6 +5744,8 @@ snapshots:
       is-typed-array: 1.1.15
       possible-typed-array-names: 1.1.0
       reflect.getprototypeof: 1.0.10
+
+  typescript-event-target@1.1.1: {}
 
   typescript@5.8.3: {}
 
