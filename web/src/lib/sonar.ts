@@ -14,7 +14,7 @@ export async function querySonar(question: string): Promise<SonarResponse> {
       {
         model: 'sonar-pro',
         messages: [{ role: 'user', content: question }],
-        max_tokens: 100
+        max_tokens: 100 
       },
       {
         headers: {

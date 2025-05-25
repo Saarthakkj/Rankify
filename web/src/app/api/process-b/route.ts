@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { scrapePage } from '@/lib/scrape';
+import { scrapePage_multiple } from '@/lib/scrape';
 import {chunking} from '@/lib/chunks'; 
+import FirecrawlApp from '@mendable/firecrawl-js';
+const app = new FirecrawlApp({apiKey: process.env.FIRECRAWL_API_KEY});
 import {hashMap} from '@/lib/hashmap'; 
 
 export const runtime = 'nodejs';
@@ -10,15 +12,28 @@ export async function POST(req: NextRequest) {
         const citations_list = await req.json();
         // console.log("citations list : " , citations_list); 
 
-        var scraped_page = "";
+        const dummy = [citations_list[0] , citations_list[1]  ,  citations_list[2] ] ;
 
-        citations_list.forEach(async (citation : string) => {
-             scraped_page + (await scrapePage(citation)) ;
-        });
+        console.log("citations dummy : " , dummy); 
+
+        // var scraped_page = "";
+
+        const scrapedpage = await scrapePage_multiple(citations_list) ;
+
+       
+
+
+
+
+        // const scraped_page = (await scrapePage(citations_list));
+
+        // citations_list.forEach(async (citation : string) => {
+        //     scraped_page + (await scrapePage(citation)) ;
+        // });
 
         console.log("\n\n --- SCRAPED----- \n\n") ; 
 
-        const chunks = chunking(scraped_page) ;
+        // const chunks = chunking(scraped_page) ;
 
         console.log("\n\n --- CHUKING DONE----- \n\n") ;
 
