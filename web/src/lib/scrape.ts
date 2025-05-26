@@ -45,7 +45,15 @@ export async function scrapePage(url : string) : Promise<string>  {
 export async function scrapePage_multiple(urls: string[]): Promise<string[]> {
     try {
       // 1) Start the batch scrape job
-      const init = await app.asyncBatchScrapeUrls(urls, { formats: ['markdown', 'html'] }) as BatchScrapeResponse;
+      var init ;
+      try{
+        init = await app.asyncBatchScrapeUrls(urls, { formats: ['markdown', 'html'] }) as BatchScrapeResponse;
+      }catch(err){
+        console.log("error in processing process-b reponse : " , err);
+        return [] ;
+      }
+
+      
       if (!init.success || !init.id) {
         throw new Error(`Batch scrape failed to start: ${init.error}`);
       }
@@ -63,7 +71,7 @@ export async function scrapePage_multiple(urls: string[]): Promise<string[]> {
 
       const response = status.data.map(doc => doc.markdown ?? ''); 
 
-      console.log("\n\n\  --- DATA SCRAPED : \n\n" , response);
+      // console.log("\n\n\  --- DATA SCRAPED : \n\n" , response);
       return response; 
 
     }catch(error){

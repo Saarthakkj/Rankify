@@ -1,44 +1,41 @@
-import  {GoogleGenerativeAI } from '@google/generative-ai' ;
+// import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getEncoding } from 'js-tiktoken';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro-preview-05-06' });
+const MAX_TOKENS_PER_CHUNK = 800_000;
 
-const MAX_TOKENS_PER_CHUNK = 800_000 ;
+export async function chunking(text: string, maxTokens = MAX_TOKENS_PER_CHUNK): Promise<string[]> {
+  console.log('chunking start');
+  const enc = getEncoding('cl100k_base');
+  console.log(` tokensize of text : ${enc.encode(text).length}`);
 
-export async function chunking(text : string  , maxTokens= MAX_TOKENS_PER_CHUNK) : Promise<string[]>{
-    const lines = text.split(/\r?\n+/).filter(Boolean);
-    const chunks : string[] = [] ; 
-    let bufferLines : string[]  = []
-    let bufferTokenCount = 0
+  
+  
+  // split & pre-count
+  const lines = text.split(/\r?\n+/).filter(Boolean);
+  const lineInfos = lines.map(line => ({ line, tokens: enc.encode(line).length }));
 
-    for(const line of lines){
-        const candidate = [...bufferLines , line].join('\n') ;
-        const {totalTokens} = await model.countTokens(candidate);
+  const chunks: string[] = [];
+  let bufTokens = 0, bufLines: string[] = [];
 
-        if(totalTokens <= maxTokens){
-            bufferLines.push(line); 
-            bufferTokenCount = totalTokens; 
-        } else{
-            if(bufferLines.length){
-                chunks.push(bufferLines.join('\n')); 
-            }
-        }
-
-        const {totalTokens : lineTokens} = await model.countTokens(line) ;
-        if(lineTokens <= maxTokens){
-            bufferLines = [line]
-            bufferTokenCount = lineTokens
-        }else{
-            chunks.push(line)
-            bufferLines = []
-            bufferTokenCount = 0
-        }
-
-        console.log("Token_count_per_chunks : " ,bufferTokenCount , " \n" ) ; 
+  for (const { line, tokens } of lineInfos) {
+    if (bufTokens + tokens <= maxTokens) {
+      bufLines.push(line);
+      bufTokens += tokens;
+    } else {
+      if (bufLines.length) chunks.push(bufLines.join('\n'));
+      if (tokens <= maxTokens) {
+        bufLines = [line];
+        bufTokens = tokens;
+      } else {
+        chunks.push(line);
+        bufLines = [];
+        bufTokens = 0;
+      }
     }
-    //flush : 
-    if(bufferLines.length){
-        chunks.push(bufferLines.join('\n')); 
-    }
-    return chunks ; 
+  }
+  if (bufLines.length) chunks.push(bufLines.join('\n'));
+  console.log(`chunking done in ${(Date.now())/1000}s`);
+  console.log("token size of each chunk - ");
+  chunks.forEach(chunk => {console.log((enc.encode(chunk).length) + "\n");});
+  return chunks;
 }

@@ -1,5 +1,7 @@
 'use client';
 
+//! TODO : remove dummy citations_list with citations_list 
+
 import { useState, useRef, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -114,9 +116,6 @@ function SonarCallContent() {
       )}
 
       {/* display the number of calls */}
-      <p className="text-sm text-gray-500">
-        process-b calls made: {processBCalls}
-      </p>
 
 
       {Object.keys(citationFrequency).length > 0 && (
