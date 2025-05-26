@@ -1,3 +1,5 @@
+
+
 const BUSINESS_NAME = "";
 const BUSINESS_DESCRIPTION = "";
 const SCRAPED_TEXT = ""; 

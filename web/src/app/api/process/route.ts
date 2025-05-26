@@ -3,8 +3,14 @@ import { scrapePage } from '@/lib/scrape';
 import { saveMarkdown } from '@/lib/markdown';
 import { generateQueries } from '@/lib/llm';
 import { querySonar } from '@/lib/sonar';
+<<<<<<< HEAD
 import contentModel from '@/models/content.model';
 import { dbConnect } from '@/lib/dbconnect';
+=======
+import { promises as fs } from 'fs';
+import path from 'path';
+
+>>>>>>> d11ee4d (hashmap changes)
 
 export const runtime = 'nodejs';
 
@@ -22,6 +28,7 @@ export async function POST(req: NextRequest) {
     // 1. Scrape content
     const content = await scrapePage(url);
 
+<<<<<<< HEAD
     if (!content) {
       console.error('Scraped content is empty or undefined');
       return NextResponse.json({ error: 'Failed to scrape content' }, { status: 500 });
@@ -37,6 +44,13 @@ export async function POST(req: NextRequest) {
     // console.log('Scraped content length:', content.length);
   
     // console.log('Content preview:', content.slice(0, 200));
+=======
+    // --- NEW: log to disk ---
+    const tmpLogFile = path.join('/tmp', 'processLogs.jsonl');
+    await fs.appendFile(tmpLogFile, JSON.stringify({ url, content }) + '\n');
+    // --- end NEW ---
+
+>>>>>>> d11ee4d (hashmap changes)
 
     // 2. Persist markdown (fire and forget)
     saveMarkdown(content, url).catch((err) => {
