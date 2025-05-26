@@ -3,13 +3,16 @@ import { scrapePage_multiple } from '@/lib/scrape';
 import {chunking} from '@/lib/chunks'; 
 import FirecrawlApp from '@mendable/firecrawl-js';
 const app = new FirecrawlApp({apiKey: process.env.FIRECRAWL_API_KEY});
-import {hashMap} from '@/lib/hashmap'; 
+import { hashMap } from '@/lib/hashmap'; 
 
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
     try {
-        const citations_list = await req.json();
+        const {citations_list, url} = await req.json();
+
+        console.log('Request body:', { citations_list, url });
+        
         // console.log("citations list : " , citations_list); 
 
         // const dummy = [citations_list[0] , citations_list[1]  ,  citations_list[2] ] ;

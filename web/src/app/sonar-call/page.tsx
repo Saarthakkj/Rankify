@@ -23,7 +23,7 @@ function SonarCallContent() {
     setProcessBCalls((c) => c+1); 
     const citations = Object.keys(freq);
     const response = await fetch('/api/process-b', 
-      { method: 'POST', body: JSON.stringify(citations) }
+      { method: 'POST', body: JSON.stringify({ citations_list: citations, url: urlParam }) }
     );
 
     if(!response.ok ) throw new Error("error in response of process-b"); 
