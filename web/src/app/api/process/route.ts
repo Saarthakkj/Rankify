@@ -6,11 +6,12 @@ import { querySonar } from '@/lib/sonar';
 import contentModel from '@/models/content.model';
 import { dbConnect } from '@/lib/dbconnect';
 
+
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   try {
-    await dbConnect()
+    await dbConnect();
     const { url } = await req.json();
     // console.log('Request body:', { url });
 
@@ -37,6 +38,7 @@ export async function POST(req: NextRequest) {
     // console.log('Scraped content length:', content.length);
   
     // console.log('Content preview:', content.slice(0, 200));
+
 
     // 2. Persist markdown (fire and forget)
     saveMarkdown(content, url).catch((err) => {
