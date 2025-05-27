@@ -21,7 +21,13 @@ export async function POST(req: NextRequest) {
     }
 
     // 1. Scrape content
-    const content = await scrapePage(url);
+    let n_tries =  5; 
+    let content = "";
+    for(let i = 0 ; i < n_tries ; i++){
+      content = await scrapePage(url);
+      if(content) break; 
+      console.log("failed at " , (i+1) , "attempt. retrying ... ");
+    }
 
     if (!content) {
       console.error('Scraped content is empty or undefined');
