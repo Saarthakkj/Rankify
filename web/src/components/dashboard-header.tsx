@@ -35,7 +35,7 @@ export function DashboardHeader({ children, currentUrl = "example.com" }: Dashbo
         </div>
 
         <nav className="flex items-center gap-1 md:gap-2">
-          {navItems.map((item) => (
+          {/* {navItems.map((item) => (
             <Button
               key={item.value}
               variant="ghost"
@@ -51,7 +51,7 @@ export function DashboardHeader({ children, currentUrl = "example.com" }: Dashbo
               <item.icon className="h-4 w-4" />
               <span className="hidden md:inline-block">{item.name}</span>
             </Button>
-          ))}
+          ))} */}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

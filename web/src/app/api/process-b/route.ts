@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
         // const citations_list = await req.json();
         const dummy_citations_list = citations_list.slice(0, 4);
         let scrapedPages_array : string[] = []; 
-        let n_tries = 5;
+        const n_tries = 5;
 
         for(let i = 0; i < n_tries ; i++){
             scrapedPages_array = await scrapePage_multiple(dummy_citations_list);
@@ -154,7 +154,7 @@ export async function POST(req: NextRequest) {
 
         console.log('suggestions for current business : ' , response_data);
 
-        return NextResponse.json({ sortedHashmap, what_good_competitors  , response_data });
+        return NextResponse.json({ sortedHashmap, what_good_competitors, response_data});
     }
     catch(error){
         console.error("error in processing process-b reponse" , error);

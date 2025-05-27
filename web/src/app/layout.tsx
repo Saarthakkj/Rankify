@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { font } from "@/fonts/font";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Rankify",
@@ -25,7 +26,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-
+            <Toaster />
         {children}
           </ThemeProvider>
       </body>
