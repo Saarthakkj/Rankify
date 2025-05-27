@@ -11,7 +11,7 @@ interface InsightCardProps {
   }
 }
 
-export function InsightCard({ insight }: InsightCardProps) {
+export function InsightCard({ insight }: any) {
   return (
     <Card className="overflow-hidden border-gray-200 dark:border-gray-800 hover:border-purple-200 dark:hover:border-purple-800 transition-colors">
       <CardContent className="p-4">
@@ -23,11 +23,11 @@ export function InsightCard({ insight }: InsightCardProps) {
             rel="noopener noreferrer"
             className="flex items-center gap-1  text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
           >
-            {insight.website}
+            {insight.url}
             <ExternalLink className="h-3 w-3" />
           </a>
         </div>
-        <p className="text-sm text-muted-foreground mb-3">{insight.description}</p>
+        <p className="text-sm text-muted-foreground mb-3">{insight.optimized_content}</p>
         {/* <div className="space-y-2">
           <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Key Strategies:</h4>
           <ul className="space-y-1">

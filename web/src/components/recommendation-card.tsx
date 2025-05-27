@@ -14,31 +14,31 @@ interface RecommendationCardProps {
   }
 }
 
-export function RecommendationCard({ recommendation }: RecommendationCardProps) {
+export function RecommendationCard({ index, recommendation }: any) {
   return (
     <Card className="overflow-hidden border-gray-200 dark:border-gray-800 hover:border-purple-200 dark:hover:border-purple-800 transition-colors">
       <CardContent className="p-4">
         <div className="flex items-start gap-3 mb-3">
-          <div className="bg-purple-100 dark:bg-purple-900/20 p-2 rounded-full">{recommendation.icon}</div>
+          {/* <div className="bg-purple-100 dark:bg-purple-900/20 p-2 rounded-full">{recommendation.icon}</div> */}
           <div>
-            <h3 className="font-medium">{recommendation.title}</h3>
-            <div className="flex gap-2 mt-1">
+            {/* <h3 className="font-medium">{index}</h3> */}
+            {/* <div className="flex gap-2 mt-1">
               <Badge variant="outline" className={`text-xs ${getDifficultyClass(recommendation.difficulty)}`}>
                 {recommendation.difficulty}
               </Badge>
               <Badge variant="outline" className={`text-xs ${getImpactClass(recommendation.impact)}`}>
                 {recommendation.impact} Impact
               </Badge>
-            </div>
+            </div> */}
           </div>
         </div>
-        <p className="text-sm text-muted-foreground">{recommendation.description}</p>
+        <p className="text-sm text-accent-foreground">{recommendation}</p>
       </CardContent>
-      <CardFooter className="p-4 pt-0">
+      {/* <CardFooter className="p-4 pt-0">
         <Button variant="outline" size="sm" className="w-full">
           View Details <ArrowRight className="ml-1 h-3.5 w-3.5" />
         </Button>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   )
 }
