@@ -36,7 +36,6 @@ export default function DashboardPage() {
   const [aiScore, setAiScore] = useState(78)
   const [activeTab, setActiveTab] = useState("overview")
   const [isLoading, setIsLoading] = useState(false)
-//   const [competitors, setCompetitors] = useState({
 //     "Forethought": 20,
 //     "Zendesk": 19,
 //     "Ada": 12,
@@ -66,8 +65,6 @@ export default function DashboardPage() {
 //     "*   **Expand on specific use cases and benefits with concrete examples:** Instead of general statements like \"solve your customers' hardest problems,\" provide short, real-world examples or scenarios illustrating how specific features (like real-time data sync or actions) deliver tangible value (e.g., \"Chatbase helps customers track their order status instantly by connecting to your order management system,\" or \"Allow agents to update customer details directly within the chat by integrating with your CRM.\").",
 //     "*   **Consider adding concise \"How-To\" or \"Getting Started\" summaries:** Simple, step-by-step instructions on core processes (e.g., \"How to build your first AI agent in 5 steps\") provide highly actionable content that generative AI can easily summarize for users seeking guidance."
 // ])
-
-
 
   const [whatTheyAreDoingRight, setWhatTheyAreDoingRight] = useState([])
   const [whatYouShouldDo, setWhatYouShouldDo] = useState([])
@@ -181,6 +178,22 @@ export default function DashboardPage() {
     },
   }
 
+
+  function getHostname(raw: string): string {
+    try {
+      return new URL(raw).hostname;
+    } catch {
+      return new URL(`https://${raw}`).hostname;
+    }
+  }
+
+  // softmax over an array of numbers
+  function softmax(arr: number[]): number[] {
+    const max = Math.max(...arr);
+    const exps = arr.map((v) => Math.exp(v - max));
+    const sum = exps.reduce((a, b) => a + b, 0);
+    return exps.map((e) => e / sum);
+  }
   async function notifyCitationChange(freq: Record<string, number>) {
     setProcessBCalls((c) => c+1); 
     const citations = Object.keys(freq);
@@ -193,6 +206,19 @@ export default function DashboardPage() {
     setCompetitors(data.sortedHashmap)
     setWhatYouShouldDo(data.response_data);
 
+      // compute aiScore from competitors frequencies:
+    const host = getHostname(url);
+    const entries = Object.entries(data.sortedHashmap);
+    console.log("ENTRIES IN FE : " , entries);
+    const freqs = entries.map(([, val]) => typeof val === "number" ? val :  0);
+    const domains = entries.map(([k]) => k);
+    if (domains.includes(host)) {
+      const probs = softmax(freqs);
+      const idx = domains.indexOf(host);
+      setAiScore(Math.round(probs[idx] * 100));
+    } else {
+      setAiScore(10);
+    }
     if(!response.ok ) throw new Error("error in response of process-b"); 
     console.log("process-b response : ", data); 
     toast.success("Competitor analysis and recommendations updated successfully")
@@ -446,7 +472,7 @@ export default function DashboardPage() {
                       {/* {competitors.map((competitor, index) => (
                         <CompetitorCard key={index} competitor={competitor} />
                       ))} */}
-                      {Object.entries(competitors).map(([name, competitor], index) => ( 
+                      {Object.entries(competitors).slice(0 , 5).map(([name, competitor], index) => ( 
                         <CompetitorCard key={index} name={name} competitor={competitor} />
                       ))}
                     </div>
