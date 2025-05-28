@@ -3,35 +3,37 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function whats_good(content: string, urls : string[]): Promise<{ url: string; optimized_content: string }[]>{
+
+  const input_data = {urls , content};
+  // console.log("input data to whats_good gemini : " , input_data) ;
   const prompt = 
   `
-    You are an AI assistant specialized in identifying Generative Engine Optimization (GEO) strategies in web content. You will be provided with a list of three URLs and their corresponding scraped content. They all are top-performing websites in Perplexity's responses in their respective domain. Your task is to analyze each content piece and identify the sub-content (e.g., a paragraph or section) that is most likely to have contributed to the website's high ranking in generative search results. This sub-content should exemplify one or more of the following GEO strategies:
+    You are an AI assistant powered by Gemini, specialized in identifying Generative Engine Optimization (GEO) strategies in web content. 
+    You will be provided with a input_data which is an object containing a list of 3 page URLs and the scraped content respectively of each url to analyze. of from top-performing sites. 
+    Your task is to analyze each page and produce a concise yet detailed summary of its GEO-optimized content.
 
-    Quotation Addition: Direct quotes from authoritative sources.
-    Statistics Addition: Concrete numbers or statistics providing factual hooks.
-    Cite Sources: Inline references or citations grounding claims in citable documents.
-    Fluency Optimization: Well-polished wording, smooth transitions, and coherent sentence flow.
-    Authoritative Tone: Assertive phrasing that enhances perceived influence.
-    Easy-to-Understand: Simplified language or explanations avoiding jargon.
-    Unique Words & Technical Terms: Domain-specific terminology or uncommon phrases.
-    For each URL, extract the key segment that best aligns with these strategies and is most likely to have been featured in generative search responses. The selected segment should be a direct excerpt from the original content, not modified or enhanced further. Aim to choose a contiguous block of text (e.g., one to three paragraphs) that is informative, well-supported, and exhibits qualities appealing to a generative engine, such as clarity, authority, and factual grounding.
+    Each summary should highlight the key GEO strategies used, providing specific examples from the content that illustrate each strategy, along with any nuanced aspects of their application. The GEO strategies to look for are:
 
-    Once you have identified the optimized sub-content for each URL, return the results in a JSON array where each entry is an object with:
+    - Quotation Addition: Incorporation of direct quotes from authoritative sources to lend credibility and depth. Look for phrases in quotation marks attributed to experts or reputable publications. Note how the quote is integrated into the narrative, such as framing an argument or emphasizing a key point.
+    - Statistics Addition: Use of concrete numbers or statistics to provide factual hooks that make the content more compelling and trustworthy. Identify numerical data, percentages, or statistical findings. Observe how these statistics are contextualized or emphasized, such as through comparisons or bold formatting.
+    - Cite Sources: Inclusion of inline references or citations that ground claims in citable documents, enhancing reliability. Look for footnotes, hyperlinks to sources, or mentions of studies and reports. Note the frequency and relevance of these citations to the content’s claims.
+    - Fluency Optimization: Ensuring smooth transitions and coherent flow throughout the text for better readability. Pay attention to the logical progression of ideas and the use of transitional phrases. Highlight any particularly effective transitions or structural elements that enhance comprehension.
+    - Authoritative Tone: Use of assertive phrasing and confident language to enhance credibility and persuasiveness. Look for strong, definitive statements and the absence of hedging language like "perhaps" or "maybe." Note the overall tone and any rhetorical devices used to reinforce authority.
+    - Easy-to-Understand: Prioritization of clear explanations and avoidance of jargon to make content accessible to a broad audience. Identify simple, straightforward language and explanations of technical terms. Observe how complex ideas are simplified without losing accuracy.
+    - Unique Terms: Use of domain-specific terminology or uncommon phrases that add specificity and expertise. Look for specialized vocabulary or phrases not commonly used in everyday language. Note how these terms are introduced or explained to maintain clarity.
 
-    "url": The original URL.
-    "optimized_content": The extracted segment that exemplifies GEO strategies and likely contributed to the website's high ranking.
-    Ensure that the selected segments are coherent, self-contained, and representative of the content's optimization for generative search engines.
+    Return your results as a JSON array of strings, where each string is a three-to-four sentence summary of the page’s GEO-optimized content. Each summary should:
+    1. Identify the GEO strategies used.
+    2. Provide specific examples from the content for each strategy.
+    3. Highlight any nuanced or sophisticated applications of the strategies.
+      
+    Ensure that your analysis is objective and based solely on the content provided, avoiding personal opinions or interpretations not supported by the text. Only include strategies that are evidently used in the content; do not mention strategies that are absent.
 
-    Example Output:
-    [{
-        "url": "https://example1.com",
-        "optimized_content": "According to a recent study by Harvard University [1], the use of renewable energy has increased by 25% in the past five years. 'This is a significant step towards sustainability,' says Dr. Jane Smith, a leading expert in the field."
-    },
-    {
-        "url": "https://example2.com",
-        "optimized_content": "The latest report from the World Health Organization [2] indicates that global vaccination rates have reached 85%, a milestone in public health. Experts emphasize that 'continued efforts are essential to maintain this progress.'"
-    }]
+    Example summary:  
+    "The page employs Quotation Addition by including a direct quote from Dr. Jane Smith, a leading expert, saying, 'The impact of this technology is profound,' which not only adds credibility but also sets the tone for the discussion. It also uses Statistics Addition with the claim, 'Studies show a 25% increase in efficiency,' where the statistic is emphasized by a comparison to industry standards, enhancing its persuasive impact. Additionally, an authoritative tone shines through in statements like, 'It is clear that this is the best approach,' projecting confidence, while unique terms like 'quantum entanglement' are simplified as 'a special connection between particles,' blending expertise with accessibility."
     
+    
+    input_data : ${input_data}
     `;
   const model = genAI.getGenerativeModel({
     model: "gemini-2.5-flash-preview-04-17",
@@ -49,21 +51,26 @@ export async function whats_good(content: string, urls : string[]): Promise<{ ur
   try {
     const arr = JSON.parse(cleanedText);
     if (Array.isArray(arr)) {
-      // assume each element already has {url, optimized_content}
-      return arr.slice(0, 10) as { url: string; optimized_content: string }[];
+      const response = [
+        {
+        url : urls[0] , 
+        optimized_content: arr[0]
+        } , 
+        {
+        url : urls[1] , 
+        optimized_content: arr[1]
+        } ,
+        {
+        url : urls[2] , 
+        optimized_content: arr[2]
+        } ,
+      ]; 
+
+      return response;
     }
   } catch (error) {
     console.error("JSON parse error:", error, "Raw text:", raw);
   }
 
-  // fallback: map lines into objects
-  return cleanedText
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .slice(0, 10)
-    .map((optimized_content, idx) => ({
-      url: urls[idx] || "",
-      optimized_content,
-    }));
+  return [] ;
 }

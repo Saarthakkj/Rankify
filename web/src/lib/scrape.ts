@@ -69,7 +69,7 @@ export async function scrapePage_multiple(urls: string[]): Promise<string[]> {
         throw new Error(`Batch scrape did not complete successfully: ${status.status}`);
       }
 
-      const response = status.data.map(doc => doc.markdown ?? ''); 
+      const response = status.data.map(doc => doc.markdown?.substring(0 , 10000) ?? ''); 
 
       // console.log("\n\n\  --- DATA SCRAPED : \n\n" , response);
       return response; 
