@@ -31,7 +31,7 @@ export async function whats_good(content: string, urls : string[]): Promise<{ ur
 
     Example summary:  
     "The page employs Quotation Addition by including a direct quote from Dr. Jane Smith, a leading expert, saying, 'The impact of this technology is profound,' which not only adds credibility but also sets the tone for the discussion. It also uses Statistics Addition with the claim, 'Studies show a 25% increase in efficiency,' where the statistic is emphasized by a comparison to industry standards, enhancing its persuasive impact. Additionally, an authoritative tone shines through in statements like, 'It is clear that this is the best approach,' projecting confidence, while unique terms like 'quantum entanglement' are simplified as 'a special connection between particles,' blending expertise with accessibility."
-    
+    Return type - Strictly Don't put any aeshtrick in the content. And keep the character limit of each point not more than 200
     
     input_data : ${input_data}
     `;
@@ -42,35 +42,31 @@ export async function whats_good(content: string, urls : string[]): Promise<{ ur
   const response = result.response;
   const raw = response.text().trim() ?? "[]";
 
-   // strip ```json blocks
-  const cleanedText = raw
+  // strip any surrounding markdown fences
+  let cleanedText = raw
     .replace(/^```(?:json)?/, "")
     .replace(/```$/, "")
     .trim();
 
+  // extract only the JSON array between the first '[' and last ']'
+  const start = cleanedText.indexOf("[");
+  const end = cleanedText.lastIndexOf("]");
+  if (start !== -1 && end !== -1) {
+    cleanedText = cleanedText.slice(start, end + 1);
+  }
+
   try {
     const arr = JSON.parse(cleanedText);
     if (Array.isArray(arr)) {
-      const response = [
-        {
-        url : urls[0] , 
-        optimized_content: arr[0]
-        } , 
-        {
-        url : urls[1] , 
-        optimized_content: arr[1]
-        } ,
-        {
-        url : urls[2] , 
-        optimized_content: arr[2]
-        } ,
-      ]; 
-
+      const response = urls.map((url, i) => ({
+        url,
+        optimized_content: arr[i] || ""
+      }));
       return response;
     }
   } catch (error) {
-    console.error("JSON parse error:", error, "Raw text:", raw);
+    console.error("JSON parse error:", error, "Cleaned text:", cleanedText);
   }
 
-  return [] ;
+  return [];
 }

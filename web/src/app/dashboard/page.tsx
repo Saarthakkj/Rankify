@@ -19,6 +19,46 @@ export default function DashboardPage() {
   const [url, setUrl] = useState("example.com")
   const [businessDesc, setBusinessDesc] = useState("AI-powered content optimization platform")
   const [aiScore, setAiScore] = useState(78)
+  const [activeTab, setActiveTab] = useState("overview")
+  const [isLoading, setIsLoading] = useState(false)
+
+
+  // const [competitors, setCompetitors] = useState({});
+//     "Forethought": 20,
+//     "Zendesk": 19,
+//     "Ada": 12,
+//     "chatbase": 0
+// })
+//   const [whatTheyAreDoingRight, setWhatTheyAreDoingRight] = useState([
+//     {
+//         url: "https://www.health.harvard.edu/blog/what-are-the-real-risks-of-e-cigarettes-2020010818604",
+//         optimized_content: "There is also substantial — and growing — evidence that e-cigarettes pose other health risks. Here are some examples:\n\nIn addition to nicotine, e-cigarettes contain other harmful substances. Vaping liquid contains a solvent, often glycerin and/or propylene glycol, that creates the aerosol when heated. Although these solvents are considered safe when used in foods and cosmetics, their safety when inhaled is not clear. When heated and inhaled, propylene glycol can irritate the airways and eyes. Glycerin when heated can be converted to a chemical called acrolein, which can damage the lungs and blood vessels. In addition, e-cigarette vapor contains other substances, such as heavy metals, volatile organic compounds, and cancer-causing agents, at concentrations higher than in ambient air, although lower than in cigarette smoke. These substances have been linked to lung and heart disease.\n\nVaping can cause lung damage. Cases of serious lung damage requiring hospitalization and even leading to death have been reported in people who use e-cigarettes. These cases, collectively called EVALI (e-cigarette or vaping product use-associated lung injury), are believed to be caused by a substance in vaping liquid called vitamin E acetate, which is especially common in products that contain THC (tetrahydrocannabinol). EVALI cases have declined recently, but some cases are still occurring, and the long-term consequences of inhaling vitamin E acetate are not yet known."
+//     },
+//     {
+//         url: "https://www.nerdwallet.com/article/finance/how-to-budget",
+//         optimized_content: "Budgeting is simply creating a plan for how you will spend and save your money. A budget is essential for taking control of your finances and setting yourself up for financial success. Following a budget can help you pay off debt, save money and afford the things you want.\n\nReady to make a budget? Here’s a five-step guide on how to budget your money. Remember to choose a budgeting strategy that works for you. It doesn’t have to be painful or complex.\n\n1. Calculate your monthly income. This is the amount of money you expect to bring in each month after taxes. Make sure you're working with your actual take-home pay.\n\n2. Track your spending. See where your money is going for a month. You can use a simple spreadsheet, notebook or budgeting app to do this. This step is critical for understanding your spending habits and identifying areas where you can cut back.\n\n3. Create a spending plan. Now it’s time to categorize your expenses and allocate funds based on your income and spending habits. Be realistic and make sure your essential expenses (like rent, utilities and groceries) are covered first.\n\n4. Monitor and adjust regularly. A budget isn’t a one-time thing. Review your spending regularly and adjust your budget as needed to reflect changes in income, expenses or financial goals.\n\n5. Set financial goals. What do you want your money to do for you? Whether it’s paying off debt, saving for a down payment or building an emergency fund, having clear goals will give your budget purpose and keep you motivated."
+//     },
+//     {
+//         url: "https://www.travelandleisure.com/travel-guide/london/things-to-do",
+//         optimized_content: "There's no shortage of world-class museums and galleries in London, many of which are free to enter. The British Museum, with its vast collection of artifacts from around the globe, and the National Gallery, home to a staggering array of European paintings, are essential stops. Art lovers should also visit the Tate Modern for modern and contemporary art and the Victoria and Albert Museum (V&A) for decorative arts and design.\n\nExploring London's neighborhoods is another excellent way to experience the city. Each area has its own distinct character, from the trendy streets of Shoreditch and the bohemian vibe of Notting Hill to the upscale boutiques of Chelsea and the historic charm of Hampstead. Wander through borough markets like Borough Market or Columbia Road Flower Market for a taste of local life and unique finds.\n\nFor a break from the urban bustle, head to one of London's many parks. Hyde Park, Regent's Park, and Richmond Park offer vast green spaces perfect for strolling, picnicking, or simply relaxing. Richmond Park is particularly known for its herds of deer roaming freely."
+//     }
+// ])
+// const [whatYouShouldDo, setWhatYouShouldDo] = useState([
+//     "Here are recommended changes to optimize your content for Generative Engine Optimization (GEO):",
+//     "*   **Structure content with clear headings and explicit questions/answers:** Organize information using H2, H3 tags, and consider incorporating sections formatted as \"Q: [User question]? A: [Your answer].\" or clear introductory sentences that directly address potential user queries (e.g., \"Here's how Chatbase streamlines customer support...\", \"Benefits of using AI agents include...\"). This helps generative AI extract specific answers efficiently.",
+//     "*   **Incorporate statistics and quantifiable results directly into relevant benefit statements:** Instead of just listing \"Advanced reporting,\" integrate metrics like \"Gain insights and optimize agent performance with detailed analytics, leading to an average X% improvement in resolution time.\" Mentioning \"9000+ businesses worldwide\" is a good start; integrate similar data points where possible (e.g., support deflection rates, time saved).",
+//     "*   **Add external citations or references where applicable:** While testimonials and certifications provide authority, consider citing industry reports, market research, or academic papers that support claims about AI agent effectiveness, security standards, or the future of customer service. This adds a layer of verifiable authority similar to academic or news sources.",
+//     "*   **Ensure technical terms are clearly explained for a broad audience:** While using terms like \"LLMs,\" \"RAG,\" and \"agentic approach\" is necessary, provide concise, easy-to-understand definitions or explanations within the text or link to a glossary. This makes the content accessible to non-technical users and ensures generative AI can accurately explain complex concepts.",
+//     "*   **Refine content fluency by minimizing unnecessary clutter:** Ensure the core textual content is dominant and easily readable, reducing reliance on image descriptions, video placeholders, or repetitive elements in the scraped text format. Focus on smooth transitions between ideas and sections.",
+//     "*   **Expand on specific use cases and benefits with concrete examples:** Instead of general statements like \"solve your customers' hardest problems,\" provide short, real-world examples or scenarios illustrating how specific features (like real-time data sync or actions) deliver tangible value (e.g., \"Chatbase helps customers track their order status instantly by connecting to your order management system,\" or \"Allow agents to update customer details directly within the chat by integrating with your CRM.\").",
+//     "*   **Consider adding concise \"How-To\" or \"Getting Started\" summaries:** Simple, step-by-step instructions on core processes (e.g., \"How to build your first AI agent in 5 steps\") provide highly actionable content that generative AI can easily summarize for users seeking guidance."
+// ])
+
+  const [whatTheyAreDoingRight, setWhatTheyAreDoingRight] = useState([])
+  const [whatYouShouldDo, setWhatYouShouldDo] = useState([])
+  const [competitors, setCompetitors] = useState({})
+
+
 
   // Mock data for the dashboard
   const competitors = [
@@ -94,6 +134,155 @@ export default function DashboardPage() {
         staggerChildren: 0.1,
       },
     },
+  }
+
+
+  function getHostname(raw: string): string {
+    try {
+      return new URL(raw).hostname;
+    } catch {
+      return new URL(`https://${raw}`).hostname;
+    }
+  }
+
+  // softmax over an array of numbers
+  function softmax(arr: number[]): number[] {
+    const max = Math.max(...arr);
+    const exps = arr.map((v) => Math.exp(v - max));
+    const sum = exps.reduce((a, b) => a + b, 0);
+    return exps.map((e) => e / sum);
+  }
+
+  async function notifyCitationChange(freq: Record<string, number>) {
+    setProcessBCalls((c) => c+1); 
+    const citations = Object.keys(freq);
+    const response = await fetch('/api/process-b', 
+      { method: 'POST', body: JSON.stringify({ citations_list: citations, url }) }
+    );
+
+    const data = await response.json();
+    setWhatTheyAreDoingRight(data.what_good_competitors);
+    setCompetitors(data.sortedHashmap)
+    setWhatYouShouldDo(data.response_data);
+
+      // compute aiScore from competitors frequencies:
+    const host = getHostname(url);
+    const entries = Object.entries(data.sortedHashmap);
+    console.log("ENTRIES IN FE : " , entries);
+    const freqs = entries.map(([, val]) => typeof val === "number" ? val :  0);
+    const domains = entries.map(([k]) => k);
+    if (domains.includes(host)) {
+      const probs = softmax(freqs);
+      const idx = domains.indexOf(host);
+      setAiScore(Math.round(probs[idx] * 100));
+    } else {
+      setAiScore(10);
+    }
+
+    if(!response.ok ) throw new Error("error in response of process-b"); 
+    console.log("process-b response : ", data); 
+    toast.success("Competitor analysis and recommendations updated successfully")
+    setIsLoading(false);
+  }
+
+  async function handleAnalyze() {
+    if (!url) {
+      toast.error("Please enter a valid URL")
+      return
+    }
+
+    setIsLoading(true)
+    setResults([]);
+    localStorage.setItem("url", url)
+    // const response = await fetch(`/api/process?url=${encodeURIComponent(url)}`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   }
+    // })
+
+      try {
+        const res = await fetch("/api/process", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url }),
+        });
+        if (!res.ok) {
+          throw new Error("Server error");
+        }
+        const data = await res.json();
+        setResults(data.results || []);
+
+        console.log("process response : ", data);
+        
+        
+        // Calculate citation frequency
+        const citations: Record<string, number> = {};
+        const uniqueCitations = new Set<string>();
+        
+        data.results?.forEach((result: any) => {
+          // Filter out duplicate citations by URL domain
+          const resultCitations = result.citations || [];
+          // @ts-expect-error type of citation is not defined
+          const filteredCitations = resultCitations.filter(citation => {
+            // Skip if we already added this exact citation
+            if (uniqueCitations.has(citation)) return false;
+            
+            // Check if the domain is the same as any already added citation
+            for (const existingCitation of uniqueCitations) {
+              if (isSameDomain(citation, existingCitation)) {
+                return false;
+              }
+            }
+            
+            uniqueCitations.add(citation);
+            return true;
+          });
+          
+          // Update result with filtered citations
+          result.citations = filteredCitations;
+          
+          // Count citations for frequency display
+          // @ts-expect-error type of citation is not defined
+          filteredCitations.forEach(citation => {
+            citations[citation] = (citations[citation] || 0) + 1;
+          });
+        });
+        
+        setCitationFrequency(citations);
+      } catch (err: any) {
+        setError(err.message || "Unknown error");
+      } 
+    }
+
+    useEffect(() => {
+        // console.log("\n----CALLED : \n")
+        if (!Object.keys(citationFrequency).length  || hasNotified.current) return;
+        hasNotified.current = true; 
+        notifyCitationChange(citationFrequency);
+      }, [citationFrequency]);
+    
+
+  
+
+  // const handleViewAll = (section: string) => {
+  //   setActiveTab(section === "competitors" ? "competitors" : "recommendations")
+  //   // toast({
+  //   //   title: `Viewing All ${section === "competitors" ? "Competitors" : "Recommendations"}`,
+  //   //   description: `Showing detailed ${section === "competitors" ? "competitor" : "recommendation"} information`,
+  //   // })
+  // }
+  if (isLoading) {
+    return (
+      // <div className="flex items-center justify-center min-h-screen">
+      //   <div className="text-center">
+      //     <h2 className="text-2xl font-bold mb-4">Analyzing {url}...</h2>
+      //     <p className="text-muted-foreground">This may take a few moments.</p>
+      //   </div>
+      // </div>
+      <SimpleLoadingWithText url={url} />
+    )
+    
   }
 
   return (
@@ -252,6 +441,9 @@ export default function DashboardPage() {
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                       {competitors.map((competitor, index) => (
                         <CompetitorCard key={index} competitor={competitor} />
+                      ))} */}
+                      {Object.entries(competitors).slice(0 , 5).map(([name, competitor], index) => ( 
+                        <CompetitorCard key={index} name={name} competitor={competitor} />
                       ))}
                     </div>
                   </CardContent>
