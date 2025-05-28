@@ -40,7 +40,6 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-loader-spinner": "^6.1.6",
-    "react-to-pdf": "^2.0.0",
     "remark": "^15.0.1",
     "remark-parse": "^11.0.0",
     "remark-stringify": "^11.0.0",
