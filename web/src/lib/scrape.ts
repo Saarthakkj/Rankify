@@ -45,7 +45,7 @@ export async function scrapePage(url : string) : Promise<string>  {
 export async function scrapePage_multiple(urls: string[]): Promise<string[]> {
     try {
       // 1) Start the batch scrape job
-      var init ;
+      let init
       try{
         init = await app.asyncBatchScrapeUrls(urls, { formats: ['markdown', 'html'] }) as BatchScrapeResponse;
       }catch(err){
