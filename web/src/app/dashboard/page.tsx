@@ -6,7 +6,6 @@ import { LineChart, Lightbulb, Search, TrendingUp, Users, Zap } from "lucide-rea
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CircularProgressBar } from "@/components/circular-progress"
 import { CompetitorCard } from "@/components/competitor-card"
@@ -17,7 +16,6 @@ import { DashboardShell } from "@/components/dashboard-shell"
 import { ExportReportDialog } from "@/components/export-report-dialog"
 import { ScheduleRefreshDialog } from "@/components/schedule-refresh-dialog"
 import { ActionPlanDialog } from "@/components/action-plan-dialog"
-import { DotLottieReact } from "@lottiefiles/dotlottie-react"
 import {toast} from "sonner"
 import SimpleLoadingWithText from "@/components/Loader"
 
@@ -236,6 +234,7 @@ export default function DashboardPage() {
         data.results?.forEach((result: any) => {
           // Filter out duplicate citations by URL domain
           const resultCitations = result.citations || [];
+          // @ts-expect-error type of citation is not defined
           const filteredCitations = resultCitations.filter(citation => {
             // Skip if we already added this exact citation
             if (uniqueCitations.has(citation)) return false;
@@ -255,6 +254,7 @@ export default function DashboardPage() {
           result.citations = filteredCitations;
           
           // Count citations for frequency display
+          // @ts-expect-error type of citation is not defined
           filteredCitations.forEach(citation => {
             citations[citation] = (citations[citation] || 0) + 1;
           });
