@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 1. Scrape content
-    let n_tries =  5; 
+    const n_tries =  5; 
     let content = "";
     for(let i = 0 ; i < n_tries ; i++){
       content = await scrapePage(url);

@@ -32,8 +32,13 @@ export async function POST(req: NextRequest) {
 
         // 1) pull in the stored content for this URL
 
-        const origin = new URL(req.url).origin;
-        const apiURL = `${origin}/api/get-url-data?url=${encodeURIComponent(url)}`;
+        // const origin = new URL(req.url).origin;
+        // const apiURL = `${origin}/api/get-url-data?url=${encodeURIComponent(url)}`;
+
+
+        const apiBase = process.env.INTERNAL_API_BASE || 'http://localhost:10000';
+        const apiURL = `${apiBase}/api/get-url-data?url=${encodeURIComponent(url)}`;
+        
         console.log("api url : " , apiURL); 
         const getUrlRes = await fetch(apiURL);
         if (!getUrlRes.ok) {
@@ -57,7 +62,7 @@ export async function POST(req: NextRequest) {
         // const citations_list = await req.json();
         const dummy_citations_list = citations_list.slice(0, 10);
         let scrapedPages_array : string[] = []; 
-        let n_tries = 5;
+        const n_tries = 5;
 
         for(let i = 0; i < n_tries ; i++){
             scrapedPages_array = await scrapePage_multiple(dummy_citations_list);
@@ -184,7 +189,7 @@ export async function POST(req: NextRequest) {
 
         console.log('suggestions for current business : ' , response_data);
 
-        return NextResponse.json({ sortedHashmap, what_good_competitors  , response_data });
+        return NextResponse.json({ sortedHashmap, what_good_competitors, response_data});
     }
     catch(error){
         console.error("error in processing process-b reponse" , error);

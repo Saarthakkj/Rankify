@@ -22,8 +22,13 @@ export default function LandingPage() {
     if (!url  ) return
 
     setIsAnalyzing(true)
+    // router.push(
+    //   `/sonar-call?url=${encodeURIComponent(url)}`
+    // )
+
+    localStorage.setItem("url", url)
     router.push(
-      `/sonar-call?url=${encodeURIComponent(url)}`
+      `/dashboard?url=${encodeURIComponent(url)}`
     )
   }
 
