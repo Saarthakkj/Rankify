@@ -15,7 +15,6 @@ import {
 import { toast } from "sonner"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { usePDF } from 'react-to-pdf';
 
 
 export function ExportReportDialog({ toPdf }: { toPdf: () => void }) {

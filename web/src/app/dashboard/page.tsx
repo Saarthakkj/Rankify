@@ -18,7 +18,6 @@ import { ScheduleRefreshDialog } from "@/components/schedule-refresh-dialog"
 import { ActionPlanDialog } from "@/components/action-plan-dialog"
 import {toast} from "sonner"
 import SimpleLoadingWithText from "@/components/Loader"
-import generatePDF, { usePDF } from 'react-to-pdf';
 
 
 export default function DashboardPage() {
@@ -68,7 +67,6 @@ export default function DashboardPage() {
 //     "*   **Consider adding concise \"How-To\" or \"Getting Started\" summaries:** Simple, step-by-step instructions on core processes (e.g., \"How to build your first AI agent in 5 steps\") provide highly actionable content that generative AI can easily summarize for users seeking guidance."
 // ])
 
-   const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
 
 
   const [whatTheyAreDoingRight, setWhatTheyAreDoingRight] = useState([])
@@ -325,12 +323,12 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2">
                 {/* <ExportReportDialog toPdf={toPDF} />
                  */}
-                 <Button variant="outline" size="sm" onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Export Report</Button>
+                 <Button variant="outline" size="sm" >Export Report</Button>
                 <ScheduleRefreshDialog />
               </div>
             </div>
 
-            <TabsContent value="overview" className="space-y-6" ref={targetRef}>
+            <TabsContent value="overview" className="space-y-6" >
               <motion.div
                 className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto"
                 initial="hidden"
