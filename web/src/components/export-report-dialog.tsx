@@ -15,8 +15,10 @@ import {
 import { toast } from "sonner"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
+import { usePDF } from 'react-to-pdf';
 
-export function ExportReportDialog() {
+
+export function ExportReportDialog({ toPdf }: { toPdf: () => void }) {
   const [open, setOpen] = useState(false)
   const [format, setFormat] = useState("pdf")
   const [isLoading, setIsLoading] = useState(false)
@@ -24,13 +26,19 @@ export function ExportReportDialog() {
   const handleExport = () => {
     setIsLoading(true)
 
-    // Simulate export process
-    setTimeout(() => {
-      setIsLoading(false)
-      setOpen(false)
+    if (format === "pdf") {
+      // Handle PDF export logic here
+      toast("Exporting as PDF...")
+      toPdf()
+    }
 
-      toast("Report Exported")
-    }, 2000)
+    // Simulate export process
+    // setTimeout(() => {
+    //   setIsLoading(false)
+    //   setOpen(false)
+
+    //   toast("Report Exported")
+    // }, 2000)
   }
 
   return (

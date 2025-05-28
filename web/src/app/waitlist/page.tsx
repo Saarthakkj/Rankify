@@ -12,28 +12,44 @@ import Link from "next/link"
 import { toast} from "sonner"
 import Image from "next/image"
 import { serifFont } from "@/fonts/font"
+import { supabase } from "@/lib/supabaseClient"
 
 export default function WaitlistPage() {
   const [email, setEmail] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { theme,setTheme } = useTheme()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!email || !email.includes("@")) {
       toast("Invalid email")
       return
     }
-
     setIsSubmitting(true)
+    const { data, error } = await supabase
+      .from('waitlist')
+      .insert([{ email }]);
 
+      if (error) {
+      console.error(error);
+        if (error.code === "23505") {
+          toast("You are already on the waitlist!");
+          setIsSubmitting(false);
+        } else {
+          toast("Error adding to waitlist. Please try again later.");
+          setIsSubmitting(false);
+        }
+
+    } else {
+      toast("Successfully added to waitlist! 🎉");
+      console.log("Email added to waitlist:", data);
+      setIsSubmitting(false);
+    }
+    
     // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setEmail("")
-      toast("Successfully joined the waitlist!", {})
-    }, 1500)
+    setIsSubmitting(false)
+    setEmail("")
   }
 
   return (
