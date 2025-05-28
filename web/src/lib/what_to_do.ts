@@ -68,6 +68,8 @@ You are an AI assistant specialized in Generative Engine Optimization (GEO). You
 - Incorporate quotes from industry experts, such as “Renewable energy is the future,” says Dr. John Doe, to boost credibility.
 - Add specific statistics, like “Solar energy usage grew 30% in 2023,” to make content more data-driven.
 - Include citations to reputable sources (e.g., universities or industry reports) to enhance authority.
+
+Return type - strictily return only array of strings (without any paranthesis) with your response of critique of GEO. Don't return anything else. Strictly Don't put any aeshtrick in the content. Keep each point less than 250 characters.
 `
 
 export async function what_to_do(

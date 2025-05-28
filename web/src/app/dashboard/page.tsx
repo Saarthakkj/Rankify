@@ -440,7 +440,7 @@ export default function DashboardPage() {
                       {/* {competitors.map((competitor, index) => (
                         <CompetitorCard key={index} competitor={competitor} />
                       ))} */}
-                      {Object.entries(competitors).map(([name, competitor], index) => ( 
+                      {Object.entries(competitors).slice(0 , 3).map(([name, competitor], index) => ( 
                         <CompetitorCard key={index} name={name} competitor={competitor} />
                       ))}
                     </div>
@@ -482,7 +482,7 @@ export default function DashboardPage() {
                       {/* {insights.map((insight, index) => (
                         <InsightCard key={index} insight={insight} />
                       ))} */}
-                      {whatTheyAreDoingRight.map((insight, index) => (
+                      {whatTheyAreDoingRight.slice(0 , 3).map((insight, index) => (
                         <InsightCard key={index} insight={insight} />
                       ))}
                     </div>
