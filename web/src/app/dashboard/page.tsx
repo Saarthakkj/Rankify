@@ -19,6 +19,7 @@ import { ActionPlanDialog } from "@/components/action-plan-dialog"
 import {toast} from "sonner"
 import SimpleLoadingWithText from "@/components/Loader"
 
+
 export default function DashboardPage() {
   const [url, setUrl] = useState(() => {
   if (typeof window !== 'undefined') {
@@ -35,7 +36,6 @@ export default function DashboardPage() {
   const [aiScore, setAiScore] = useState(78)
   const [activeTab, setActiveTab] = useState("overview")
   const [isLoading, setIsLoading] = useState(false)
-//   const [competitors, setCompetitors] = useState({
 //     "Forethought": 20,
 //     "Zendesk": 19,
 //     "Ada": 12,
@@ -178,6 +178,22 @@ export default function DashboardPage() {
     },
   }
 
+
+  function getHostname(raw: string): string {
+    try {
+      return new URL(raw).hostname;
+    } catch {
+      return new URL(`https://${raw}`).hostname;
+    }
+  }
+
+  // softmax over an array of numbers
+  function softmax(arr: number[]): number[] {
+    const max = Math.max(...arr);
+    const exps = arr.map((v) => Math.exp(v - max));
+    const sum = exps.reduce((a, b) => a + b, 0);
+    return exps.map((e) => e / sum);
+  }
   async function notifyCitationChange(freq: Record<string, number>) {
     setProcessBCalls((c) => c+1); 
     const citations = Object.keys(freq);
@@ -190,6 +206,19 @@ export default function DashboardPage() {
     setCompetitors(data.sortedHashmap)
     setWhatYouShouldDo(data.response_data);
 
+      // compute aiScore from competitors frequencies:
+    const host = getHostname(url);
+    const entries = Object.entries(data.sortedHashmap);
+    console.log("ENTRIES IN FE : " , entries);
+    const freqs = entries.map(([, val]) => typeof val === "number" ? val :  0);
+    const domains = entries.map(([k]) => k);
+    if (domains.includes(host)) {
+      const probs = softmax(freqs);
+      const idx = domains.indexOf(host);
+      setAiScore(Math.round(probs[idx] * 100));
+    } else {
+      setAiScore(10);
+    }
     if(!response.ok ) throw new Error("error in response of process-b"); 
     console.log("process-b response : ", data); 
     toast.success("Competitor analysis and recommendations updated successfully")
@@ -262,6 +291,7 @@ export default function DashboardPage() {
         
         setCitationFrequency(citations);
       } catch (err: any) {
+        setIsLoading(false);
         setError(err.message || "Unknown error");
       } 
     }
@@ -312,17 +342,19 @@ export default function DashboardPage() {
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="competitors">Competitors</TabsTrigger>
-                <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-                <TabsTrigger value="content">Content Analysis</TabsTrigger>
+                {/* <TabsTrigger value="recommendations">Recommendations</TabsTrigger> */}
+                {/* <TabsTrigger value="content">Content Analysis</TabsTrigger> */}
               </TabsList>
 
               <div className="flex items-center gap-2">
-                <ExportReportDialog />
+                {/* <ExportReportDialog toPdf={toPDF} />
+                 */}
+                 <Button variant="outline" size="sm" >Export Report</Button>
                 <ScheduleRefreshDialog />
               </div>
             </div>
 
-            <TabsContent value="overview" className="space-y-6">
+            <TabsContent value="overview" className="space-y-6" >
               <motion.div
                 className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto"
                 initial="hidden"

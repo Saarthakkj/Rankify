@@ -16,6 +16,9 @@ export const runtime = 'nodejs';
 export async function POST(req: NextRequest) {
     try {
         await dbConnect();
+        // let global_startTime = Date.now();
+
+        let startTime_b = Date.now(); 
         console.log("inside-process-b") ;
         const {citations_list, url , _} = await req.json();
 
@@ -29,8 +32,13 @@ export async function POST(req: NextRequest) {
 
         // 1) pull in the stored content for this URL
 
-        const origin = new URL(req.url).origin;
-        const apiURL = `${origin}/api/get-url-data?url=${encodeURIComponent(url)}`;
+        // const origin = new URL(req.url).origin;
+        // const apiURL = `${origin}/api/get-url-data?url=${encodeURIComponent(url)}`;
+
+
+        const apiBase = process.env.INTERNAL_API_BASE || 'http://localhost:10000';
+        const apiURL = `${apiBase}/api/get-url-data?url=${encodeURIComponent(url)}`;
+        
         console.log("api url : " , apiURL); 
         const getUrlRes = await fetch(apiURL);
         if (!getUrlRes.ok) {
@@ -41,11 +49,18 @@ export async function POST(req: NextRequest) {
             );
         }
         const { content } = await getUrlRes.json();
-        console.log('Stored content:', content.slice(0, 200));
+        // console.log('Stored content:', content.slice(0, 200));
+
+
+        let endTime_b = Date.now(); 
+        console.log(` time taken in fetching url and content from db - ${(endTime_b - startTime_b)/1000}`);
+
+        startTime_b = Date.now();
+        
 
         // console.log("citations list : " , citations_list); 
         // const citations_list = await req.json();
-        const dummy_citations_list = citations_list.slice(0, 4);
+        const dummy_citations_list = citations_list.slice(0, 10);
         let scrapedPages_array : string[] = []; 
         const n_tries = 5;
 
@@ -60,6 +75,14 @@ export async function POST(req: NextRequest) {
 
         console.log("\n\n --- SCRAPED----- \n\n") ; 
 
+        endTime_b = Date.now();
+
+        console.log(` time taken in scraping from dummy_citations_list - ${(endTime_b - startTime_b)/1000}`);
+        startTime_b = Date.now();
+
+
+
+
         const scrapedPages = scrapedPages_array.join(" ");
 
         if(scrapedPages === ""){
@@ -69,6 +92,10 @@ export async function POST(req: NextRequest) {
 
         const chunks = await chunking(scrapedPages);
         console.log("\n\n --- CHUKING DONE----- \n\n");
+
+        endTime_b = Date.now();
+        console.log(` time taken in chunking - ${(endTime_b - startTime_b)/1000}`);
+
 
         const startTime = Date.now(); 
         const response_hashmap = await hashMap(chunks , content , businessName);
@@ -117,10 +144,18 @@ export async function POST(req: NextRequest) {
        
         // const top3 = Object.keys(sortedHashmap).slice(0, 4);
 
-        console.log("top 3 :  ," ,top3);
+        // console.log("top 3 :  ," ,top3);
+
+        startTime_b = Date.now();
+
 
 
         const sonarRes = await urlFinder(top3);
+
+        endTime_b = Date.now(); 
+
+        console.log(` time taken in finding url  - ${(endTime_b - startTime_b)/1000}`);
+
         // console.log("sonarResponse : " , sonarRes);
         let urls: string[];
         try {
@@ -130,7 +165,7 @@ export async function POST(req: NextRequest) {
             urls = sonarRes.citations ?? [];
         }
 
-        console.log("urls : " , urls); 
+        // console.log("urls : " , urls); 
 
         // — scrape again + whats_good
         let pages : string[] = [];
@@ -144,7 +179,7 @@ export async function POST(req: NextRequest) {
 
         const what_good_competitors = await whats_good(pages.join(' '), urls);
 
-        console.log("response_data : " , what_good_competitors); 
+        // console.log("response_data : " , what_good_competitors); 
 
         const input_final_feature = {competitors: what_good_competitors ,user_content: content};
 

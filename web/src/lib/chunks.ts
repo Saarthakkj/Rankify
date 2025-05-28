@@ -17,7 +17,7 @@ export async function chunking(text: string, maxTokens = MAX_TOKENS_PER_CHUNK): 
   const chunks: string[] = [];
   let bufTokens = 0, bufLines: string[] = [];
 
-  const startTime = Date.now(); 
+  // const startTime = Date.now(); 
 
   for (const { line, tokens } of lineInfos) {
     if (bufTokens + tokens <= maxTokens) {
@@ -36,8 +36,8 @@ export async function chunking(text: string, maxTokens = MAX_TOKENS_PER_CHUNK): 
     }
   }
   if (bufLines.length) chunks.push(bufLines.join('\n'));
-  const endTime = Date.now();
-  console.log(`chunking done in ${(endTime - startTime)/1000}s`);
+  // const endTime = Date.now();
+  // console.log(`chunking done in ${(endTime - startTime)/1000}s`);
   console.log("token size of each chunk - ");
   chunks.forEach(chunk => {console.log((enc.encode(chunk).length) + "\n");});
   return chunks;
