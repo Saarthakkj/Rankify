@@ -21,13 +21,13 @@ export function InsightCard({ insight }: any) {
             href={insight.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1  text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
+            className="flex items-center gap-1 text-sm  text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
           >
             {insight.url}
-            <ExternalLink className="h-3 w-3" />
+            {/* <ExternalLink className="h-3 w-3" /> */}
           </a>
         </div>
-        <p className="text-sm text-muted-foreground mb-3">{insight.optimized_content}</p>
+        <p className="text-sm text-muted-foreground mb-3">{insight.optimized_content.slice(0, 200)}...</p>
         {/* <div className="space-y-2">
           <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Key Strategies:</h4>
           <ul className="space-y-1">
