@@ -18,6 +18,7 @@ import { ScheduleRefreshDialog } from "@/components/schedule-refresh-dialog"
 import { ActionPlanDialog } from "@/components/action-plan-dialog"
 import {toast} from "sonner"
 import SimpleLoadingWithText from "@/components/Loader"
+import { set } from "mongoose"
 
 export default function DashboardPage() {
   const [url, setUrl] = useState(() => {
@@ -262,6 +263,7 @@ export default function DashboardPage() {
         
         setCitationFrequency(citations);
       } catch (err: any) {
+        setIsLoading(false);
         setError(err.message || "Unknown error");
       } 
     }
