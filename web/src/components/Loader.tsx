@@ -43,7 +43,7 @@ const SimpleLoadingWithText = ({ url = "your website" }) => {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="text-center">
-        <h2 className="text-4xl font-bold mb-10"> AI is Analyzing {url}</h2>
+        <h2 className="text-4xl font-bold mb-10"> Fluxio is Analyzing {url}</h2>
         <h2 className="text-2xl font-bold mb-2">{loadingText}{dots}</h2>
         <p className="text-muted-foreground">This may take a few moments.</p>
       </div>

@@ -453,7 +453,7 @@ export default function DashboardPage() {
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle>Top 6 Competitors</CardTitle>
+                        <CardTitle>Top 3 Competitors</CardTitle>
                         <CardDescription>Websites with similar content and audience</CardDescription>
                       </div>
                       <Button

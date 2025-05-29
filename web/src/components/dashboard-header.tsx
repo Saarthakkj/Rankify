@@ -31,7 +31,7 @@ export function DashboardHeader({ children, currentUrl = "example.com" }: Dashbo
       <div className="container flex h-16 items-center">
         <div className="flex items-center gap-2 mr-6">
           <Globe className="h-6 w-6 text-purple-600" />
-          <Link href={"/"} className="font-bold text-lg hidden sm:inline-block">RankInsight</Link>
+          <Link href={"/"} className="font-bold text-lg hidden sm:inline-block">FLuxio</Link>
         </div>
 
         <nav className="flex items-center gap-1 md:gap-2">
