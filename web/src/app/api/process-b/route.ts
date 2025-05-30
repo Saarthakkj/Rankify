@@ -32,12 +32,8 @@ export async function POST(req: NextRequest) {
 
         // 1) pull in the stored content for this URL
 
-        // const origin = new URL(req.url).origin;
-        // const apiURL = `${origin}/api/get-url-data?url=${encodeURIComponent(url)}`;
-
-
-        const apiBase = process.env.INTERNAL_API_BASE || 'http://localhost:10000';
-        const apiURL = `${apiBase}/api/get-url-data?url=${encodeURIComponent(url)}`;
+        const origin = new URL(req.url).origin;
+        const apiURL = `${origin}/api/get-url-data?url=${encodeURIComponent(url)}`;
         
         console.log("api url : " , apiURL); 
         const getUrlRes = await fetch(apiURL);
@@ -45,7 +41,7 @@ export async function POST(req: NextRequest) {
             console.error('Failed to fetch stored content', getUrlRes.status);
             return NextResponse.json(
                 { error: 'Could not load content for URL' },
-                { status: getUrlRes.status }
+                { status: getUrlRes.status }    
             );
         }
         const { content } = await getUrlRes.json();
