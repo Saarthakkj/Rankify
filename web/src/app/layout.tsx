@@ -1,12 +1,13 @@
-import type { Metadata } from "next"
+import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { font } from "@/fonts/font";
 import { Toaster } from "@/components/ui/sonner";
 import { PostHogProvider } from "@/providers/posthog-provider";
 import Script from "next/script";
-import { AnalyticsProvider } from "@/providers/googleanalytics";
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { GA_TRACKING_ID } from "@/lib/gtag";
+
 
 export const metadata: Metadata = {
   title: "Rankify",
@@ -21,27 +22,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <head>
-        {/* Google Analytics - Global Site Tag (gtag.js) */}
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-HW337EG7SD"
-        />
-        <Script
-          id="gtag-init"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', ${GA_TRACKING_ID}, {Add commentMore actions
-                page_path: window.location.pathname,
-              });
-            `,
-          }}
-        />
-      </head>
       <body
         className={` antialiased ${font.className} bg-background text-foreground`}
       >
@@ -52,15 +32,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Toaster />
-
-          {/* Your custom tracking script */}
           <Script
             defer
             data-domain="https://rankify-l7e3.onrender.com" // Replace with your domain
             src="https://analytics-code.vercel.app/tracking-script.js"
           />
-          <AnalyticsProvider />
-
+          <GoogleAnalytics gaId={GA_TRACKING_ID} />
           <PostHogProvider>{children}</PostHogProvider>
         </ThemeProvider>
       </body>
