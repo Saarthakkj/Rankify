@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
         if (!getUrlRes.ok) {
             console.error('Failed to fetch stored content', getUrlRes.status);
             return NextResponse.json(
-                { error: 'Could not load content for URL' },
+                { error: 'Could not load content for URL ' },
                 { status: getUrlRes.status }    
             );
         }
@@ -59,14 +59,23 @@ export async function POST(req: NextRequest) {
         const dummy_citations_list = citations_list.slice(0, 10);
         let scrapedPages_array : string[] = []; 
         const n_tries = 5;
+        let isFailed = true;
 
         for(let i = 0; i < n_tries ; i++){
             scrapedPages_array = await scrapePage_multiple(dummy_citations_list);
             
             // Check if we got results
-            if(scrapedPages_array.length > 0) break;
+            if(scrapedPages_array.length > 0) {
+                isFailed = false;
+                break;
+            }
             
             console.log(`Attempt ${i + 1} failed, retrying...`);
+        }
+        if(isFailed){
+            return NextResponse.json(
+                { error: "Umm.. this should work maybe our credits expired. DM me on X at @curlysaarthak" }
+            );
         }
 
         console.log("\n\n --- SCRAPED----- \n\n") ; 
@@ -167,21 +176,39 @@ export async function POST(req: NextRequest) {
         let pages : string[] = [];
 
         // static-retry logic : 
+
+        let scrapeMultiple = true;
         for (let i = 0; i < 5; i++) {
             pages = await scrapePage_multiple(urls);
             if (pages.length) break;
         }
-
-
-        const what_good_competitors = await whats_good(pages.join(' '), urls);
+        if(!pages.length){
+            return NextResponse.json(
+                { error: "Umm.. this should work maybe our credits expired. DM me on X at @curlysaarthak" }
+            );
+        }
+        let what_good_competitors ;
+        try{
+            what_good_competitors = await whats_good(pages.join(' '), urls);
+        }catch(error){
+            return NextResponse.json(
+                { error: "Umm.. this should work maybe our credits expired. DM me on X at @curlysaarthak" }
+            );
+        }
 
         // console.log("response_data : " , what_good_competitors); 
 
         const input_final_feature = {competitors: what_good_competitors ,user_content: content};
 
         //process-c
-
-        const response_data = await what_to_do(input_final_feature);
+        let response_data ;
+        try{
+            response_data = await what_to_do(input_final_feature);
+        }catch(error){
+            return NextResponse.json(
+                { error: "Umm.. this should work maybe our credits expired. DM me on X at @curlysaarthak" }
+            );
+        }
 
         console.log('suggestions for current business : ' , response_data);
 

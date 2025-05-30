@@ -23,15 +23,19 @@ export async function POST(req: NextRequest) {
     // 1. Scrape content
     const n_tries =  5; 
     let content = "";
+    let isFailed = true;
     for(let i = 0 ; i < n_tries ; i++){
       content = await scrapePage(url);
-      if(content) break; 
+      if(content){
+        isFailed = false;
+         break; 
+      }
       console.log("failed at " , (i+1) , "attempt. retrying ... ");
     }
 
     if (!content) {
       console.error('Scraped content is empty or undefined');
-      return NextResponse.json({ error: 'Failed to scrape content' }, { status: 500 });
+      return NextResponse.json({ error: 'Failed to scrape content of your URL, try a different one.' }, { status: 500 });
     }
 
     const savedContent = await contentModel.create({
@@ -61,6 +65,11 @@ export async function POST(req: NextRequest) {
         try {
           // console.log('Querying Sonar for:', q);
           const sonar = await querySonar(q);
+          if(!sonar){
+            return NextResponse.json(
+                { error: "Umm.. this should work maybe our credits expired. DM me on X at @curlysaarthak" }
+            );
+          }
           // console.log('Sonar response:', sonar);
           return { question: q, answer: sonar.answer , citations : sonar.citations };
         } catch (err: any) {
