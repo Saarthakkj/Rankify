@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
     // 2. Persist markdown (fire and forget)
     saveMarkdown(content, url).catch((err) => {
       console.error('Markdown save error:', err);
+      return NextResponse.json({ error: 'Please try again'});
     });
 
     // 3. Generate 10 user-style queries
