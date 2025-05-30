@@ -5,6 +5,8 @@ import { font } from "@/fonts/font";
 import { Toaster } from "@/components/ui/sonner";
 import { PostHogProvider } from "@/providers/posthog-provider";
 import Script from "next/script";
+import { AnalyticsProvider } from "@/providers/googleanalytics";
+import { GA_TRACKING_ID } from "@/lib/gtag";
 
 export const metadata: Metadata = {
   title: "Rankify",
@@ -19,8 +21,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
+      <head>
+        {/* Google Analytics - Global Site Tag (gtag.js) */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
+        />
+        <Script
+          id="gtag-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', ${GA_TRACKING_ID}, {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
+      </head>
       <body
-        className={` antialiased ${font.className} bg-background text-foreground`}
+        className={`antialiased ${font.className} bg-background text-foreground`}
       >
         <ThemeProvider
           attribute="class"
@@ -29,11 +52,15 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Toaster />
+
+          {/* Your custom tracking script */}
           <Script
             defer
-            data-domain="https://rankify-l7e3.onrender.com" // Replace with your domain
+            data-domain="https://rankify-l7e3.onrender.com"
             src="https://analytics-code.vercel.app/tracking-script.js"
           />
+          <AnalyticsProvider />
+
           <PostHogProvider>{children}</PostHogProvider>
         </ThemeProvider>
       </body>
