@@ -32,12 +32,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Toaster />
-          <Script
-            defer
-            data-domain="https://rankify-l7e3.onrender.com" // Replace with your domain
-            src="https://analytics-code.vercel.app/tracking-script.js"
-          />
-          <GoogleAnalytics gaId={GA_TRACKING_ID} />
+          <GoogleAnalytics gaId="G-HW337EG7SD" />
           <PostHogProvider>{children}</PostHogProvider>
         </ThemeProvider>
       </body>
