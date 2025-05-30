@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { font } from "@/fonts/font";
 import { Toaster } from "@/components/ui/sonner";
 import { PostHogProvider } from "@/providers/posthog-provider";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Rankify",
@@ -26,11 +27,14 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-          >
+        >
           <Toaster />
-          <PostHogProvider>
-            {children}
-            </PostHogProvider>
+          <Script
+            defer
+            data-domain="https://rankify-l7e3.onrender.com" // Replace with your domain
+            src="https://analytics-code.vercel.app/tracking-script.js"
+          />
+          <PostHogProvider>{children}</PostHogProvider>
         </ThemeProvider>
       </body>
     </html>
