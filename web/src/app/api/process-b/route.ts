@@ -178,7 +178,7 @@ export async function POST(req: NextRequest) {
 
         // static-retry logic : 
 
-        let scrapeMultiple = true;
+        const scrapeMultiple = true;
         for (let i = 0; i < 5; i++) {
             pages = await scrapePage_multiple(urls);
             if (pages.length) break;
