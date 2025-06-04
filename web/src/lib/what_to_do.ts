@@ -85,7 +85,7 @@ ${JSON.stringify(input, null, 2)}`;
   });
   const result = await model.generateContent(prompt);
   const raw = result.response.text().trim() ?? "";
-  console.log("data after trimming  :  ", raw);
+  // console.log("data after trimming  :  ", raw);
 
 
   // strip any ``` blocks

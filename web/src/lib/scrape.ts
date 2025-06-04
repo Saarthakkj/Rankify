@@ -50,12 +50,11 @@ export async function scrapePage_multiple(urls: string[]): Promise<string[]> {
         init = await app.asyncBatchScrapeUrls(urls, { formats: ['markdown', 'html'] }) as BatchScrapeResponse;
       }catch(err){
         console.log("error in processing process-b reponse : " , err);
-        return [] ;
+        // return [] ;
       }
 
-      
-      if (!init.success || !init.id) {
-        throw new Error(`Batch scrape failed to start: ${init.error}`);
+      if (!init?.success || !init.id) {
+        throw new Error(`Batch scrape failed to start: ${init?.error}`);
       }
 
       // 2) Poll until the job completes

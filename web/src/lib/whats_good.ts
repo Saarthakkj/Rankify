@@ -31,9 +31,9 @@ export async function whats_good(content: string, urls : string[]): Promise<{ ur
 
     Example summary:  
     "The page employs Quotation Addition by including a direct quote from Dr. Jane Smith, a leading expert, saying, 'The impact of this technology is profound,' which not only adds credibility but also sets the tone for the discussion. It also uses Statistics Addition with the claim, 'Studies show a 25% increase in efficiency,' where the statistic is emphasized by a comparison to industry standards, enhancing its persuasive impact. Additionally, an authoritative tone shines through in statements like, 'It is clear that this is the best approach,' projecting confidence, while unique terms like 'quantum entanglement' are simplified as 'a special connection between particles,' blending expertise with accessibility."
-    Return type - Strictly Don't put any aeshtrick in the content. Return type is JSON array of strings. And keep the character limit of each point not more than 200
+    Return type - Strictly Don't put any aeshtrick in the content. Return type is JSON array of strings enclosed with [ ] brackets. And keep the character limit of each point not more than 200
     
-    input_data : ${input_data}
+    input_data : ${input_data}  
     `;
   const model = genAI.getGenerativeModel({
     model: "gemini-2.5-flash-preview-04-17",

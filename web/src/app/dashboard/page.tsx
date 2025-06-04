@@ -18,6 +18,37 @@ import { ScheduleRefreshDialog } from "@/components/schedule-refresh-dialog"
 import { ActionPlanDialog } from "@/components/action-plan-dialog"
 import {toast} from "sonner"
 import SimpleLoadingWithText from "@/components/Loader"
+import {z} from "zod"; 
+
+
+
+const urlSchema = z
+  .string()
+  .min(1 , "URL is required")
+  .url("Must be a valid URL")
+  .refine((url) => {
+    try {
+      const parsedUrl = new URL(url);
+      
+      if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+        return false;
+      }
+
+      // Check for valid hostname (not just IP)
+      if (!/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9])*$/.test(parsedUrl.hostname)) {
+        // Allow localhost and IP addresses for development
+        if (parsedUrl.hostname !== 'localhost' && !/^\d+\.\d+\.\d+\.\d+$/.test(parsedUrl.hostname)) {
+          return false;
+        }
+      }
+
+      // Optional: Add custom validation rules
+      return true; // Add your custom logic here
+    } catch {
+      return false;
+    }
+  }, "Invalid URL format");
+
 
 
 export default function DashboardPage() {
@@ -201,6 +232,13 @@ export default function DashboardPage() {
       { method: 'POST', body: JSON.stringify({ citations_list: citations, url }) }
     );
 
+    if(!response.ok){
+      const errorData = await response.json(); 
+      toast.error(errorData.error);
+      setIsLoading(false);
+      return;
+    }
+
     const data = await response.json();
     setWhatTheyAreDoingRight(data.what_good_competitors);
     setCompetitors(data.sortedHashmap)
@@ -226,75 +264,83 @@ export default function DashboardPage() {
   }
 
   async function handleAnalyze() {
-    if (!url) {
-      toast.error("Please enter a valid URL")
-      return
+    // if (!url) {
+    //   toast.error("Please enter a valid URL")
+    //   return
+    // }
+
+    let validURL : string;
+
+    try{
+      validURL = urlSchema.parse(url); 
+      setUrl(validURL) ;
+    }
+    catch(error){
+      toast.error("Please enter a valid URL"); 
+      setIsLoading(false); 
+      return ;
     }
 
     setIsLoading(true)
     setResults([]);
     localStorage.setItem("url", url)
-    // const response = await fetch(`/api/process?url=${encodeURIComponent(url)}`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   }
-    // })
-
-      try {
-        const res = await fetch("/api/process", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url }),
-        });
-        if (!res.ok) {
-          throw new Error("Server error");
-        }
-        const data = await res.json();
-        setResults(data.results || []);
-
-        console.log("process response : ", data);
-        
-        
-        // Calculate citation frequency
-        const citations: Record<string, number> = {};
-        const uniqueCitations = new Set<string>();
-        
-        data.results?.forEach((result: any) => {
-          // Filter out duplicate citations by URL domain
-          const resultCitations = result.citations || [];
-          // @ts-expect-error type of citation is not defined
-          const filteredCitations = resultCitations.filter(citation => {
-            // Skip if we already added this exact citation
-            if (uniqueCitations.has(citation)) return false;
-            
-            // Check if the domain is the same as any already added citation
-            for (const existingCitation of uniqueCitations) {
-              if (isSameDomain(citation, existingCitation)) {
-                return false;
-              }
-            }
-            
-            uniqueCitations.add(citation);
-            return true;
-          });
-          
-          // Update result with filtered citations
-          result.citations = filteredCitations;
-          
-          // Count citations for frequency display
-          // @ts-expect-error type of citation is not defined
-          filteredCitations.forEach(citation => {
-            citations[citation] = (citations[citation] || 0) + 1;
-          });
-        });
-        
-        setCitationFrequency(citations);
-      } catch (err: any) {
+    try {
+      const res = await fetch("/api/process", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      if (!res.ok) {
+        const errorData = await res.json(); 
+        toast.error(errorData.error); 
         setIsLoading(false);
-        setError(err.message || "Unknown error");
-      } 
-    }
+        return ;
+      }
+      const data = await res.json();
+      setResults(data.results || []);
+
+      console.log("process response : ", data);
+      
+      
+      // Calculate citation frequency
+      const citations: Record<string, number> = {};
+      const uniqueCitations = new Set<string>();
+      
+      data.results?.forEach((result: any) => {
+        // Filter out duplicate citations by URL domain
+        const resultCitations = result.citations || [];
+        // @ts-expect-error type of citation is not defined
+        const filteredCitations = resultCitations.filter(citation => {
+          // Skip if we already added this exact citation
+          if (uniqueCitations.has(citation)) return false;
+          
+          // Check if the domain is the same as any already added citation
+          for (const existingCitation of uniqueCitations) {
+            if (isSameDomain(citation, existingCitation)) {
+              return false;
+            }
+          }
+          
+          uniqueCitations.add(citation);
+          return true;
+        });
+        
+        // Update result with filtered citations
+        result.citations = filteredCitations;
+        
+        // Count citations for frequency display
+        // @ts-expect-error type of citation is not defined
+        filteredCitations.forEach(citation => {
+          citations[citation] = (citations[citation] || 0) + 1;
+        });
+      });
+      
+      setCitationFrequency(citations);
+    } catch (err: any) {
+      setIsLoading(false);
+      setError(err.message || "Unknown error");
+    } 
+  }
 
     useEffect(() => {
         // console.log("\n----CALLED : \n")

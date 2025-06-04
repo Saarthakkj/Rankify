@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
         // console.log("citations list : " , citations_list); 
         // const citations_list = await req.json();
         const dummy_citations_list = citations_list.slice(0, 10);
+        console.log("dummy citations : " , dummy_citations_list); 
         let scrapedPages_array : string[] = []; 
         const n_tries = 5;
         let isFailed = true;

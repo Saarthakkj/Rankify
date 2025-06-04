@@ -47,7 +47,8 @@
     "sonner": "^2.0.3",
     "swr": "^2.3.3",
     "tailwind-merge": "^3.3.0",
-    "tiktoken": "^1.0.21"
+    "tiktoken": "^1.0.21",
+    "zod": "^3.25.49"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
