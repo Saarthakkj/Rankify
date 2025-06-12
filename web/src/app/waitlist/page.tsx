@@ -61,7 +61,7 @@ export default function WaitlistPage() {
         transition={{ duration: 0.4 }}
         
         className="flex justify-between w-full max-w-5xl items-center mb-8">
-            <h1 className={`${serifFont.className} font-serif text-xl font-bold`}>Rankify</h1>
+            <h1 className={`${serifFont.className} font-serif text-xl font-bold`}>Fluxio</h1>
             {/* <h1>Support us</h1> */}
             <div className="flex items-center gap-2">
               <Button
@@ -171,7 +171,7 @@ export default function WaitlistPage() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8 }}
       >
-        © {new Date().getFullYear()} Rankify. All rights reserved.
+        © {new Date().getFullYear()} Fluxio. All rights reserved.
       </motion.div>
     </div>
   )
